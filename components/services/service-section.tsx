@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { ServiceCard } from "./service-card";
+import Breadcrumb from "../Breadcrumb";
 
 const services = [
   {
@@ -44,7 +45,9 @@ const services = [
 export function ServicesSection() {
   return (
     <section className="py-16 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Breadcrumb pageName="Services" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
         <div className="flex justify-between items-center mb-12">
           <div className="space-y-4">
             <span className="inline-block bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-medium">

@@ -3,10 +3,12 @@ import { ArrowRight, Apple, Dumbbell, SmilePlus } from "lucide-react";
 import Image from "next/image";
 import AboutImage from "../public/assests/Physiocare - Physiotherapy HTML Template_files/about-img.jpg";
 import aboutDoctorImage from "../public/assests/Physiocare - Physiotherapy HTML Template_files/export-doctor-img.jpg";
+import Breadcrumb from "./Breadcrumb";
 export default function AboutUs() {
   return (
     <>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Breadcrumb pageName="About Us" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative rounded-2xl overflow-hidden">
             <Image

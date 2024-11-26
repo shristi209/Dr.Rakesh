@@ -6,7 +6,7 @@ export default function Main() {
   return (
     <>
       {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 md:pt-0 ">
         {" "}
         <div className="container px-4 py-12 md:py-24">
           <div className="grid items-center gap-8 lg:grid-cols-2">

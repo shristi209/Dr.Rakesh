@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function page() {
   return (
-    <div className='pt-10' >
+    <div className='md:pt-10' >
         <ServicesSection />
         <ContactPage />
     </div>
