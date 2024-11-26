@@ -31,7 +31,10 @@ export default function MobileNav() {
               <Menu className="h-6 w-6" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+          <SheetContent
+            side="right"
+            className="w-[300px] sm:w-[400px] h-auto max-h-[33vh] overflow-y-auto bg-white/70 "
+          >
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <Link

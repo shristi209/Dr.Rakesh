@@ -12,7 +12,7 @@ import React from "react";
 export default function TopHeader() {
   return (
     <div className="bg-emerald-600 py-2 text-white">
-      <div className="container flex items-center justify-between px-4">
+      <div className="container flex items-center justify-around md:justify-between px-4">
         <div className="flex items-center gap-6 text-xs md:text-sm">
           <div className="flex items-center gap-2">
             <Phone className="h-4 w-4" />

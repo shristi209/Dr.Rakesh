@@ -1,7 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import { ServiceCard } from "./service-card";
 import Breadcrumb from "../Breadcrumb";
+import { AppointmentButton2 } from "../AppointmentButton";
 
 const services = [
   {
@@ -44,7 +43,7 @@ const services = [
 
 export function ServicesSection() {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 pt-[77px] bg-gray-50">
       <Breadcrumb pageName="Services" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
@@ -83,10 +82,7 @@ export function ServicesSection() {
             We understand that injuries and acute pain can unexpectedly. Our
             emergency physiotherapy.
           </p>
-          <Button className="bg-emerald-600 hover:bg-emerald-700 text-white px-6  rounded-full">
-            Book Appointment
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <AppointmentButton2 />
         </div>
       </div>
     </section>

@@ -11,14 +11,15 @@ interface NavLinkProps {
 
 export default function NavLink({ href, children }: NavLinkProps) {
   const pathname = usePathname();
-  const isActive = pathname === href;
-
+  
   return (
     <Link
       href={href}
       className={cn(
-        "transition-colors duration-200",
-        isActive ? "text-emerald-600 font-medium" : "text-gray-800 hover:text-emerald-600"
+        "text-base font-medium transition-colors hover:text-emerald-600 ",
+        pathname === href
+          ? "text-emerald-600"
+          : "text-gray-600"
       )}
     >
       {children}

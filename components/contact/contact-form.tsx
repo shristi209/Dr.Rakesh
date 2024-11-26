@@ -20,6 +20,7 @@ import { MapPin, Mail, Phone, Clock } from "lucide-react";
 import { ContactMarquee } from "./contactMarquee";
 import { ContactMap } from "./contactMap";
 import Breadcrumb from "../Breadcrumb";
+import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -71,7 +72,7 @@ export default function ContactPage() {
   ];
 
   return (
-    <>
+    <div className="pt-[13px]">
     <Breadcrumb pageName="Contact Us" />
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-6 md:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -213,6 +214,6 @@ export default function ContactPage() {
           <ContactMap />
         </div>
       </div>
-    </>
+    </div>
   );
 }

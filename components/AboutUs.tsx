@@ -1,13 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Apple, Dumbbell, SmilePlus } from "lucide-react";
+import { Apple, Dumbbell, SmilePlus } from "lucide-react";
 import Image from "next/image";
 import AboutImage from "../public/assests/Physiocare - Physiotherapy HTML Template_files/about-img.jpg";
-import aboutDoctorImage from "../public/assests/Physiocare - Physiotherapy HTML Template_files/export-doctor-img.jpg";
+// import aboutDoctorImage from "../public/assests/Physiocare - Physiotherapy HTML Template_files/export-doctor-img.jpg";
 import Breadcrumb from "./Breadcrumb";
+import { AppointmentButton2 } from "./AppointmentButton";
 export default function AboutUs() {
   return (
-    <>
+    <div className="pt-[13px]">
       <Breadcrumb pageName="About Us" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative rounded-2xl overflow-hidden">
@@ -95,8 +96,8 @@ export default function AboutUs() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div className="flex items-center justify-center">
+              {/* <div className="flex items-center gap-4">
                 <Image
                   src={aboutDoctorImage}
                   alt="Dr. Jamie Smith"
@@ -110,16 +111,13 @@ export default function AboutUs() {
                   </h3>
                   <p className="text-emerald-600">Physiotherapy</p>
                 </div>
-              </div>
+              </div> */}
 
-              <Button className="bg-emerald-600 hover:bg-emerald-700 text-white px-6  rounded-full">
-                Make An Appointment
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <AppointmentButton2 />
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

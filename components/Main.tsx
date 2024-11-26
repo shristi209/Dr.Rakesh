@@ -1,40 +1,36 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import hero from "../public/assests/Physiocare - Physiotherapy HTML Template_files/hero-img.png";
+import hero from "../public/assests/rakeshYadav.png";
+import { AppointmentButton } from "./AppointmentButton";
 export default function Main() {
   return (
     <>
       {/* Hero Section */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 md:pt-0 ">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-4 ">
         {" "}
         <div className="container px-4 py-12 md:py-24">
           <div className="grid items-center gap-8 lg:grid-cols-2">
-            <div className="space-y-6">
-              <h1 className="text-4xl font-bold leading-tight tracking-tighter text-gray-900 md:text-5xl lg:text-6xl">
-                Destination For
-                <br />
-                Relief & Wellness
+            <div className=" space-y-4 md:space-y-6">
+              <h1 className="text-2xl font-bold   text-gray-900 md:text-4xl  text-nowrap ">
+                Destination For Relief & Wellness
               </h1>
-              <p className="max-w-[600px] text-gray-600">
+              <p className="max-w-[600px] text-gray-600 md:text-base text-sm text-justify">
                 It is a long established fact that a reader will be distracted
                 the readable content of a page when looking at layout the point
-                of using lorem the ipsum less normal distribution of letters.
+                of using lorem the ipsum less normal distribution of letters. It
+                is a long established fact that a reader will be distracted the
+                readable content of a page when looking at layout the point of
+                using lorem the ipsum less normal distribution of letters.
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button className="bg-emerald-600 hover:bg-emerald-700">
                   Explore Services
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-                <Button
-                  variant="outline"
-                  className="border-emerald-600 text-emerald-600 hover:bg-emerald-50"
-                >
-                  Book Appointment
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <AppointmentButton />
               </div>
-              <div className="grid gap-8 sm:grid-cols-3">
+              {/* <div className="grid gap-8 sm:grid-cols-3">
                 <div>
                   <div className="text-3xl font-bold text-emerald-600">
                     16/7
@@ -51,7 +47,7 @@ export default function Main() {
                   </div>
                   <div className="text-sm text-gray-600">Customer</div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="relative">
               <Image
