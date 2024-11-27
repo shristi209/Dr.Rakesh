@@ -13,24 +13,23 @@ import orthopedicSurgeonImage from "../../public/assests/FRHSJuly23-3002.jpg";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#1b3a2d] text-white pb-52 md:pb-0 ">
+    <footer className="bg-[#1b3a2d] text-white pb-8 md:pb-0 ">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="w-10 md:w-14 h-10 md:h-14 bg-white rounded-full" >
-                  <Image
-                    src={orthopedicSurgeonImage}
-                    alt="Physiocare Logo"
-                    width={40}
-                    height={40}
-                    className="h-10 w-10 md:h-14 md:w-14 rounded-full"
-                  />
-                 
+              <div className="w-10 md:w-14 h-10 md:h-14 bg-white rounded-full">
+                <Image
+                  src={orthopedicSurgeonImage}
+                  alt="Physiocare Logo"
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 md:h-14 md:w-14 rounded-full"
+                />
               </div>
               <span className="text-2xl font-bold">
-              Orthopedic <span className="text-[#8fa5a0]">Surgeon</span>
+                Orthopedic <span className="text-[#8fa5a0]">Surgeon</span>
               </span>
             </div>
             <p className="text-sm text-gray-300">
@@ -38,7 +37,10 @@ export default function Footer() {
               unexpectedly. Our emergency Orthopedic Surgery.
             </p>
             <div className="flex space-x-4">
-              <Link href="https://www.facebook.com/profile.php?id=61566765223666&mibextid=LQQJ4d" className="hover:text-[#8fa5a0] transition-colors">
+              <Link
+                href="https://www.facebook.com/profile.php?id=61566765223666&mibextid=LQQJ4d"
+                className="hover:text-[#8fa5a0] transition-colors"
+              >
                 <Facebook className="w-5 h-5" />
               </Link>
               <Link href="#" className="hover:text-[#8fa5a0] transition-colors">
@@ -95,14 +97,14 @@ export default function Footer() {
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-[#8fa5a0]" />
                 <a href="tel:+9779809627872" target="_blank">
-              +977-9809627872
-            </a>
+                  +977-9809627872
+                </a>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-[#8fa5a0]" />
-                 <a href="mailto:drrakeshyad2073@gmail.com" target="_blank">
-              drrakeshyadav2073@gmail.com
-            </a>
+                <a href="mailto:drrakeshyad2073@gmail.com" target="_blank">
+                  drrakeshyadav2073@gmail.com
+                </a>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin className="w-5 h-5 text-[#8fa5a0]" />

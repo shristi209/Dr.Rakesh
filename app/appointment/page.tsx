@@ -81,11 +81,19 @@ export default function AppointmentPage() {
     });
     form.reset();
     console.log(values, "values");
+
+
   }
 
+  const breadcrumbItems = [
+    {
+      label: "Book an Appointment",
+      href: "/appointment",
+    },
+  ];
   return (
     <div className="pt-[77px] md:pt-[98px] ">
-      <Breadcrumb pageName="Book an Appointment" />
+      <Breadcrumb items={breadcrumbItems} />
       <div className="container mx-auto px-4 py-8 md:pt-20 ">
         <div className="mx-auto max-w-3xl">
           <div className="mb-8 text-center">

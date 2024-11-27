@@ -1,6 +1,6 @@
-import Breadcrumb from '@/components/Breadcrumb';
-import ContactPage from '@/components/contact/contact-form';
-import React from 'react';
+import Breadcrumb from "@/components/Breadcrumb";
+import ContactPage from "@/components/contact/contact-form";
+import React from "react";
 
 export default function Page() {
   const breadcrumbItems = [
@@ -12,7 +12,7 @@ export default function Page() {
   return (
     <div className="pt-[77px] md:pt-[98px] ">
       <Breadcrumb items={breadcrumbItems} />
-     <ContactPage />
+      <ContactPage />
     </div>
   );
 }

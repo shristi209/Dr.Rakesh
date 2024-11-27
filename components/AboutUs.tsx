@@ -2,7 +2,6 @@ import { Apple, Dumbbell, SmilePlus } from "lucide-react";
 import Image from "next/image";
 import AboutImage from "../public/assests/Physiocare - Physiotherapy HTML Template_files/about-img.jpg";
 // import aboutDoctorImage from "../public/assests/Physiocare - Physiotherapy HTML Template_files/export-doctor-img.jpg";
-import Breadcrumb from "./Breadcrumb";
 import { AppointmentButton2 } from "./AppointmentButton";
 export default function AboutUs() {
   return (
