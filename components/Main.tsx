@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import hero from "../public/assests/rakeshYadav.png";
-import { AppointmentButton } from "./AppointmentButton";
+import { AppointmentButton, ExploreServices } from "./AppointmentButton";
 export default function Main() {
   return (
     <>
@@ -16,18 +16,16 @@ export default function Main() {
                 Destination For Relief & Wellness
               </h1>
               <p className="max-w-[600px] text-gray-600 md:text-base text-sm text-justify">
-                It is a long established fact that a reader will be distracted
-                the readable content of a page when looking at layout the point
-                of using lorem the ipsum less normal distribution of letters. It
-                is a long established fact that a reader will be distracted the
-                readable content of a page when looking at layout the point of
-                using lorem the ipsum less normal distribution of letters.
+                Dr. Rakesh Kumar Yadav brings vast experience from leading
+                hospitals, including Bir and Patan. He specializes in complex
+                trauma surgeries, joint replacements, and arthroscopic
+                procedures. At Bir Hospital, he mastered emergency trauma care,
+                while at Patan, he focused on advanced orthopedic treatments and
+                rehabilitation, delivering exceptional outcomes across diverse
+                clinical challenges.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button className="bg-emerald-600 hover:bg-emerald-700">
-                  Explore Services
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <ExploreServices />
                 <AppointmentButton />
               </div>
               {/* <div className="grid gap-8 sm:grid-cols-3">

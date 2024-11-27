@@ -72,8 +72,8 @@ export default function ContactPage() {
   ];
 
   return (
-    <div className="pt-[13px]">
-    <Breadcrumb pageName="Contact Us" />
+    <div>
+      {/* <Breadcrumb pageName="Contact Us" /> */}
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-6 md:py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {/* Contact Info Cards */}
@@ -115,7 +115,7 @@ export default function ContactPage() {
                   Get <span className="text-primary">In Touch</span> With Us
                 </h2>
                 <p className="text-muted-foreground">
-                 {/* eslint-disable-next-line */}
+                  {/* eslint-disable-next-line */}
                   Fill out the form below and we'll get back to you shortly.
                 </p>
               </div>

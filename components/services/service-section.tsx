@@ -43,9 +43,7 @@ const services = [
 
 export function ServicesSection() {
   return (
-    <section className="py-16 pt-[77px] bg-gray-50">
-      <Breadcrumb pageName="Services" />
-
+    <section className="  bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
         <div className="flex justify-between items-center mb-12">
           <div className="space-y-4">
