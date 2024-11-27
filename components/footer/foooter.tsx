@@ -21,6 +21,7 @@ export default function Footer() {
             <div className="flex items-center space-x-2">
               <div className="w-10 md:w-14 h-10 md:h-14 bg-white rounded-full" >
                   <Image
+                  
                     src={orthopedicSurgeonImage}
                     alt="Physiocare Logo"
                     width={40}
