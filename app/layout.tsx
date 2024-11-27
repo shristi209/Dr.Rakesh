@@ -1,10 +1,8 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import TopHeader from "@/components/header/TopHeader";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
-import orthopedicSurgeonImage from "../public/assests/rakeshYadav.png";
 import Footer from "@/components/footer/foooter";
 import BackToTop from "@/components/Back-to-top";
 import NavLink from "@/components/header/NavLink";
