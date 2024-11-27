@@ -23,6 +23,7 @@ export default function Footer() {
                 <Image
                 
                   src={orthopedicSurgeonImage}
+                  
                   alt="Physiocare Logo"
                   width={40}
                   height={40}
