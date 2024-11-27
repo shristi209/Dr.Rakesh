@@ -39,9 +39,9 @@ export default function RootLayout({
             <TopHeader />
 
             {/* Navigation */}
-            <header className="border-b bg-white py-2 md:py-4">
-              <div className=" flex justify-around  px-2 md:px-4">
-                <div className="flex items-center gap-4 px-2">
+            {/* <header className="border-b bg-white py-2 md:py-4"> */}
+            {/* <div className=" flex justify-between px-2 md:px-4 border-b bg-red-500 py-2 md:py-4 "> */}
+            {/* <div className="flex items-center gap-4 px-2">
                   <Image
                     src={orthopedicSurgeonImage}
                     alt="Physiocare Logo"
@@ -55,42 +55,42 @@ export default function RootLayout({
                       Orthopedic Surgeon
                     </p>
                   </h1>
-                </div>
+                </div> */}
 
-                {/* Desktop Navigation */}
-                <div className="flex gap-32 ">
-                  <div className="hidden md:block  md:pt-2 ">
-                    <nav>
-                      <ul className="flex items-center gap-6">
-                        <li>
-                          <NavLink href="/">Home</NavLink>
-                        </li>
-                        <li>
-                          <NavLink href="/about-us">About Us</NavLink>
-                        </li>
-                        <li>
-                          <NavLink href="/services">Services</NavLink>
-                        </li>
-                        <li>
-                          <NavLink href="/contact">Contact Us</NavLink>
-                        </li>
-                      </ul>
-                    </nav>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <Button className="hidden items-center gap-2 bg-emerald-600 hover:bg-emerald-700 hover:font-bold md:flex">
-                      <Phone className="h-4 w-4" />
-                      <a href="tel:+9779809627872" target="_blank">
-                        +977-9809627872
-                      </a>
-                    </Button>
-                    <MobileNav />
-                  </div>
-                </div>
+            {/* Desktop Navigation */}
+            <div className="flex justify-around px-2 md:px-4 border-b bg-white py-2 md:py-4 ">
+              <div className=" flex justify-center items-center">
+                <nav>
+                  <ul className="flex items-center gap-6">
+                    <li>
+                      <NavLink href="/">Home</NavLink>
+                    </li>
+                    <li>
+                      <NavLink href="/about-us">About Us</NavLink>
+                    </li>
+                    <li>
+                      <NavLink href="/services">Services</NavLink>
+                    </li>
+                    <li>
+                      <NavLink href="/contact">Contact Us</NavLink>
+                    </li>
+                  </ul>
+                </nav>
               </div>
-            </header>
+
+              <div className="flex items-center gap-4">
+                <Button className="hidden items-center gap-2 bg-emerald-600 hover:bg-emerald-700 hover:font-bold md:flex">
+                  <Phone className="h-4 w-4" />
+                  <a href="tel:+9779809627872" target="_blank">
+                    +977-9809627872
+                  </a>
+                </Button>
+                <MobileNav />
+              </div>
+            </div>
           </div>
+          {/* </header> */}
+          {/* </div> */}
         </header>
 
         {/* Main Section */}

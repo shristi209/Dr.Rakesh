@@ -9,21 +9,21 @@ export default function Main() {
         {" "}
         <div className="container px-4 py-12 md:py-24">
           <div className="grid items-center gap-8 lg:grid-cols-2">
-            <div className=" space-y-4 md:space-y-6">
+            <div className=" space-y-2 md:space-y-4">
               <h1 className="text-2xl font-bold   text-gray-900 md:text-4xl  text-nowrap ">
-                Destination For Relief & Wellness
+                Dr. Rakesh Kr. Yadav
               </h1>
-              <p className="max-w-[600px] text-gray-600 md:text-base text-sm text-justify">
-                Dr. Rakesh Kumar Yadav brings vast experience from leading
-                hospitals, including Bir and Patan. He specializes in complex
-                trauma surgeries, joint replacements, and arthroscopic
-                procedures. At Bir Hospital, he mastered emergency trauma care,
-                while at Patan, he focused on advanced orthopedic treatments and
-                rehabilitation, delivering exceptional outcomes across diverse
-                clinical challenges.
+              <p className="text-xl font-semibold text-emerald-600">
+                Orthopedic Surgeon
               </p>
-              <div className="flex flex-wrap gap-4">
-                <ExploreServices />
+              <p className="max-w-[600px] text-gray-600 md:text-base text-sm text-justify md:text-nowrap pb-4 ">
+                Fellowship in Arthroscopic Surgery(India), Fellowship in
+                Ilizarov Surgery (Kurgan)
+              </p>
+              <div className="flex flex-wrap md:gap-8 ">
+                <div className="hidden md:block">
+                  <ExploreServices />
+                </div>
                 <AppointmentButton />
               </div>
               {/* <div className="grid gap-8 sm:grid-cols-3">
