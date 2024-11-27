@@ -59,7 +59,7 @@
 // }
 // "use client";
 
-import React, { use } from "react";
+import React from "react";
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
 

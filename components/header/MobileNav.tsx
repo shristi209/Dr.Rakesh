@@ -16,6 +16,7 @@ export default function MobileNav() {
     { href: "/about-us", label: "About Us" },
     { href: "/services", label: "Services" },
     { href: "/contact", label: "Contact Us" },
+    { href: "/appointment", label: "Book Appointment" },
   ];
 
   const handleLinkClick = () => {
@@ -33,7 +34,7 @@ export default function MobileNav() {
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-[300px] sm:w-[400px] h-auto max-h-[33vh] overflow-y-auto bg-white/70 "
+            className="w-[300px] sm:w-[400px] h-auto max-h-[36vh] overflow-y-auto bg-white/70 "
           >
             <nav className="flex flex-col gap-4">
               {navLinks.map((link) => (

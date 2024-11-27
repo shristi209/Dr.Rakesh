@@ -19,8 +19,6 @@ import { Card } from "@/components/ui/card";
 import { MapPin, Mail, Phone, Clock } from "lucide-react";
 import { ContactMarquee } from "./contactMarquee";
 import { ContactMap } from "./contactMap";
-import Breadcrumb from "../Breadcrumb";
-import Image from "next/image";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),

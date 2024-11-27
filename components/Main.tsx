@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import hero from "../public/assests/rakeshYadav.png";
 import { AppointmentButton, ExploreServices } from "./AppointmentButton";

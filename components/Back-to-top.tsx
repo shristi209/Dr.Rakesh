@@ -50,7 +50,7 @@ export default function BackToTop() {
   return (
     <button
       id="back-to-top"
-      className={`fixed bottom-6 right-6 p-2 rounded-full shadow-lg transition-all duration-300 z-50 backdrop-blur-sm
+      className={`fixed bottom-12 md:bottom-6 right-6 p-2 rounded-full shadow-lg transition-all duration-300 z-50 backdrop-blur-sm
         ${
           isLight
             ? "bg-white/70 text-[#1b3a2d] hover:bg-white"

@@ -1,5 +1,4 @@
 import { ServiceCard } from "./service-card";
-import Breadcrumb from "../Breadcrumb";
 import { AppointmentButton2 } from "../AppointmentButton";
 
 const services = [
