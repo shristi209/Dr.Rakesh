@@ -14,7 +14,7 @@ export default function Main() {
                 Dr. Rakesh Kr. Yadav
               </h1>
               <p className="text-xl font-semibold text-emerald-600">
-                Orthopedic Surgeon
+              MBBS, MS-Orthopaedics  Surgeon
               </p>
               <p className="max-w-[600px] text-gray-600 md:text-base text-sm text-justify md:text-nowrap pb-4 ">
                 Fellowship in Arthroscopic Surgery(India), Fellowship in
