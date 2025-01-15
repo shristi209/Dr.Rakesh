@@ -1,13 +1,14 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import TopHeader from "@/components/header/TopHeader";
-import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
 import Footer from "@/components/footer/foooter";
 import BackToTop from "@/components/Back-to-top";
 import NavLink from "@/components/header/NavLink";
 import MobileNav from "@/components/header/MobileNav";
 import { metadata } from "./metadata";
+import LoginRegisterButton from "@/components/modal/LoginRegistrationButton";
+import { Phone } from 'lucide-react';
+import { Button } from "@/components/ui/button";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -56,7 +57,7 @@ export default function RootLayout({
                 </div> */}
 
             {/* Desktop Navigation */}
-            <div className="flex justify-around px-2 md:px-4 border-b bg-white py-2 md:py-4 ">
+            <div className="flex justify-between mx-auto px-2 md:px-4 border-b bg-white py-2 md:py-4 ">
               <div className=" flex justify-center items-center">
                 <nav>
                   <ul className="flex items-center gap-6">
@@ -77,12 +78,14 @@ export default function RootLayout({
               </div>
 
               <div className="flex items-center gap-4">
-                <Button className="hidden items-center gap-2 bg-emerald-600 hover:bg-emerald-700 hover:font-bold md:flex">
+                <Button className="hidden items-center bg-emerald-600 hover:bg-emerald-700 hover:font-bold md:flex">
                   <Phone className="h-4 w-4" />
                   <a href="tel:+9779809627872" target="_blank">
                     +977-9809627872
                   </a>
                 </Button>
+                <LoginRegisterButton></LoginRegisterButton>
+              
                 <MobileNav />
               </div>
             </div>
