@@ -20,21 +20,16 @@ const LoginRegisterButton: React.FC = () => {
         console.log(token);
     }, []);
 
-    // const handleSignOut = () => {
-    //     Cookies.remove('token');
-    //     setIsLoggedIn(false);
-    // };
 
     return (
         <div>
             {isLoggedIn ? (
-                <>
-                    <ProfileButton />
-                </>
+                <ProfileButton title={'Dashboard'} link={'/admin'}/>
+
             ) : (
                 <>
                     <Button
-                        className="hidden md:flex items-center rounded  border-[1px] border-emerald-900 hover:bg-emerald-50 font-bold"
+                        className="hidden md:flex items-center rounded text-emerald-600 border-[1px] border-emerald-900 hover:bg-emerald-50 font-bold"
                         onClick={(e) => {
                             e.preventDefault();
                             openModal();

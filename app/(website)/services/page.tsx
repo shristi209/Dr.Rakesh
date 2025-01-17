@@ -1,6 +1,6 @@
-import Breadcrumb from "@/components/Breadcrumb";
-import ContactPage from "@/components/contact/contact-form";
-import { ServicesSection } from "@/components/services/service-section";
+import Breadcrumb from "@/components/website/Breadcrumb";
+import ContactPage from "@/components/website/contact/contact-form";
+import { ServicesSection } from "@/components/website/services/service-section";
 import React from "react";
 
 export default function page() {

@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 export function AppointmentButton() {
   const router = useRouter();
   return (

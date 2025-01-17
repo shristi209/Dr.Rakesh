@@ -1,5 +1,5 @@
 import Image from "next/image";
-import hero from "../public/assests/rakeshYadav.png";
+import hero from "../../public/assests/rakeshYadav.png";
 import { AppointmentButton, ExploreServices } from "./AppointmentButton";
 export default function Main() {
   return (
@@ -21,7 +21,7 @@ export default function Main() {
                 Ilizarov Surgery (Kurgan)
               </p>
               <div className="flex flex-wrap md:gap-8 ">
-                <div className="hidden md:block">
+                <div className="hidden text-white md:block">
                   <ExploreServices />
                 </div>
                 <AppointmentButton />

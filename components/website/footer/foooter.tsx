@@ -9,7 +9,7 @@ import {
   MapPin,
 } from "lucide-react";
 import Image from "next/image";
-import orthopedicSurgeonImage from "../../public/assests/FRHSJuly23-3002.jpg";
+import orthopedicSurgeonImage from "../../../public/assests/FRHSJuly23-3002.jpg";
 
 export default function Footer() {
   return (

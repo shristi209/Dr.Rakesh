@@ -1,5 +1,5 @@
-import { ServiceCard } from "./service-card";
 import { AppointmentButton2 } from "../AppointmentButton";
+import { ServiceCard } from "./service-card";
 
 const services = [
   {

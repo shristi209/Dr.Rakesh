@@ -28,7 +28,6 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({});
     setGeneralError(null);
 
     const validationErrors = validateForm();
@@ -45,13 +44,8 @@ const LoginForm: React.FC = () => {
       });
 
       if (response.status === 200) {
-        const { token, user } = response.data;
-        if (user?.role === 'admin') {
           router.push('/');
           window.location.reload();
-      } else {
-          router.push('/'); 
-      }
       }
     } catch (error: any) {
       setGeneralError(error.response?.data?.message || 'Error during login');

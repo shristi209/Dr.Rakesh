@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import Breadcrumb from "@/components/Breadcrumb";
+import Breadcrumb from "@/components/website/Breadcrumb";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
