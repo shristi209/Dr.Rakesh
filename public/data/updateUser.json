@@ -17,13 +17,6 @@
         "value": "" 
       },
       {
-        "name": "password",
-        "label": "Password",
-        "type": "password",
-        "required": true,
-        "placeholder": "Enter your password"
-      },
-      {
         "name": "role",
         "label": "Role",
         "type": "select",

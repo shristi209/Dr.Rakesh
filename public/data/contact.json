@@ -1,0 +1,47 @@
+[
+    {
+      "name": "location",
+      "label": "Location",
+      "type": "text",
+      "placeholder": "Enter the location",
+      "required": false,
+      "value":""
+    },
+    {
+      "name": "email",
+      "label": "Email",
+      "type": "email",
+      "placeholder": "Enter the email",
+      "required": false,
+      "value":""
+
+    },
+    {
+      "name": "phone",
+      "label": "Phone",
+      "type": "tel",
+      "placeholder": "Enter the phone number",
+      "required": false,
+      "value":""
+
+    },
+    {
+      "name": "emergency_num",
+      "label": "Emergency Number",
+      "type": "tel",
+      "placeholder": "Enter the emergency number",
+      "required": false,
+      "value":""
+
+    },
+    {
+      "name": "working_hours",
+      "label": "Working Hours",
+      "type": "textarea",
+      "placeholder": "Enter the working hours",
+      "required": false,
+      "value":""
+
+    }
+  ]
+  

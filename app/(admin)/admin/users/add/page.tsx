@@ -39,7 +39,7 @@ export default function Page() {
   return (
     <>
       <Breadcrumb items={breadcrumbItems}></Breadcrumb>
-      <DynamicForm elements={data.elements} onSubmit={handleFormSubmit}></DynamicForm>
+      <DynamicForm elements={data.elements} onSubmitAction={handleFormSubmit}></DynamicForm>
     </>
   )
 }

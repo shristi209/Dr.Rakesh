@@ -1,4 +1,5 @@
 import AdminButton from "@/components/dashboard/button";
+import DeleteButton from "@/components/ui/deleteButton";
 import Breadcrumb from "@/components/website/Breadcrumb";
 import axios from "axios";
 import {
@@ -26,7 +27,6 @@ const UsersPage = async () => {
   try {
     const res = await axios.get("http://localhost:3000/api/admin/users");
     const users = res.data;
-    // console.log(users);
 
     if (!users) {
       return <div>No users found</div>;
@@ -59,7 +59,7 @@ const UsersPage = async () => {
                 <td>{user.role}</td>
                 <td className="flex gap-2">
                   <AdminButton Name="Edit" link={`/admin/users/edit/${user.id}`}/>
-                  <AdminButton Name="Delete" link={`/admin/users/delete/${user.id}`} />
+                  <DeleteButton userId={user.id}></DeleteButton>
                 </td>
               </tr>
             ))}

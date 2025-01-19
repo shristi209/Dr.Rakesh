@@ -3,7 +3,7 @@
 import DynamicForm from "@/components/ui/dynamicForm";
 import Breadcrumb from "@/components/website/Breadcrumb";
 import { useRouter, usePathname } from "next/navigation";
-import data from "../../../../../../public/data/addUser.json";  
+import data from "../../../../../../public/data/updateUser.json";  
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -11,7 +11,6 @@ export default function Page() {
   const router = useRouter();
   const pathname = usePathname();
   const userId = pathname?.split("/").pop(); 
-
   const breadcrumbItems = [
     { label: "Users", href: "/admin/users" },
     { label: "Update", href: `/admin/users/edit/${userId}` },
@@ -19,19 +18,18 @@ export default function Page() {
 
   const [userData, setUserData] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState<boolean>(true); 
-
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        console.log("fetching");
         const response = await axios.get(`/api/admin/users/${userId}`);
+        console.log("Response", response);
         if (response.status === 200) {
           setUserData(response.data); 
         } else {
           alert("Failed to fetch user data.");
         }
       } catch (error) {
-        console.error("Error fetching user data:", error);
-        alert("An error occurred while fetching the user data.");
       } finally {
         setLoading(false);  
       }
@@ -60,7 +58,7 @@ export default function Page() {
       }
     } catch (error) {
       console.error("Error updating user:", error);
-      alert("An error occurred while updating the user.");
+      alert("An error occurred while updating the user!!");
     }
   };
 
