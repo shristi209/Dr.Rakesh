@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getDbPool } from '../../../../admin/utils/db'; // Adjust based on your structure
+import { getDbPool } from '../../../../admin/utils/db'; 
 import bcrypt from 'bcrypt';
 
 export async function POST() {

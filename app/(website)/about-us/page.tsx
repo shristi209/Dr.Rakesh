@@ -7,7 +7,7 @@ export default function page() {
   const breadcrumbItems = [
     {
       label: 'About Us',
-      href: '/about',
+      href: '/about-us',
     },
   ];
   return (

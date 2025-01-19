@@ -16,6 +16,7 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ title, link }) => {
   const handleLogout = () => {
     Cookies.remove('token');
     router.push('/');
+    window.location.reload();
   };
   
   return (

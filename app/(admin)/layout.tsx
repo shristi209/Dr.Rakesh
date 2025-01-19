@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import Header from '@/components/dashboard/header/header';
 import Cookies from 'js-cookie';
+import Sidebar from '@/components/dashboard/sidebar/sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -25,40 +26,10 @@ export default function AdminLayout({
           <div className="flex items-center h-16 px-6 border-b border-gray-800">
             <Link href="/admin" className="flex items-center space-x-2">
               <LucideHome className="w-6 h-6 text-white" />
-              <span className="font-bold text-xl text-white">Admin</span>
+              <span className="font-bold text-xl text-white">Dr. Rakesh</span>
             </Link>
           </div>
-          <nav className="flex-1 p-4">
-            <ul className="space-y-1">
-              <li>
-                <Link
-                  href="/admin"
-                  className="flex items-center space-x-3 text-gray-300 hover:bg-gray-800 rounded-md px-3 py-2"
-                >
-                  <LucideBarChart className="w-5 h-5" />
-                  <span>Dashboard</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/admin/users"
-                  className="flex items-center space-x-3 text-gray-300 hover:bg-gray-800 rounded-md px-3 py-2"
-                >
-                  <LucideUsers className="w-5 h-5" />
-                  <span>Users</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/admin/settings"
-                  className="flex items-center space-x-3 text-gray-300 hover:bg-gray-800 rounded-md px-3 py-2"
-                >
-                  <LucideSettings className="w-5 h-5" />
-                  <span>Settings</span>
-                </Link>
-              </li>
-            </ul>
-          </nav>
+          <Sidebar></Sidebar>
           <div className="p-4 border-t border-gray-800">
             <Link
               href="/"
