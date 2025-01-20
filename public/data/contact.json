@@ -42,6 +42,30 @@
       "required": false,
       "value":""
 
+    },
+    {
+      "name": "facebook",
+      "label": "Facebook Link",
+      "type": "url",
+      "placeholder": "Enter the Facebook link",
+      "required": false,
+      "value": ""
+    },
+    {
+      "name": "twitter",
+      "label": "Twitter Link",
+      "type": "url",
+      "placeholder": "Enter the Twitter link",
+      "required": false,
+      "value": ""
+    },
+    {
+      "name": "instagram",
+      "label": "Instagram Link",
+      "type": "url",
+      "placeholder": "Enter the Instagram link",
+      "required": false,
+      "value": ""
     }
   ]
   

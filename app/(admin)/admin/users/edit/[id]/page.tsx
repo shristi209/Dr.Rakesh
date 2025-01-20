@@ -21,9 +21,7 @@ export default function Page() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        console.log("fetching");
         const response = await axios.get(`/api/admin/users/${userId}`);
-        console.log("Response", response);
         if (response.status === 200) {
           setUserData(response.data); 
         } else {
