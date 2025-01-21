@@ -1,0 +1,26 @@
+[
+  {
+    "name": "name",
+    "label": "Name",
+    "type": "text",
+    "placeholder": "Enter the name"
+  },
+  {
+    "name": "title",
+    "label": "Title",
+    "type": "text",
+    "placeholder": "Enter the title"
+  },
+  {
+    "name": "description",
+    "label": "Description",
+    "type": "textarea",
+    "placeholder": "Enter the description"
+  },
+  {
+    "name": "picture",
+    "label": "Picture URL",
+    "type": "text",
+    "placeholder": "Enter the image URL"
+  }
+]

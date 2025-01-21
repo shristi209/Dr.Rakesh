@@ -21,7 +21,7 @@ const ContactForm = () => {
     const fetchContactData = async () => {
       try {
         const contactId = 1;
-        const res = await axios.get(`/api/admin/contact/${contactId}`);
+        const res = await axios.get(`/api/admin/contact?id=${contactId}`);
         setContact(res.data);
       } catch (error) {
         console.error('Error fetching contact data:', error);

@@ -3,7 +3,7 @@ import Breadcrumb from "@/components/website/Breadcrumb";
 
 const breadcrumbItems = [
   {
-    label: "Contact",
+    label: "Edir Website Contact",
     href: "/admin/contact/1",
   },
 ];

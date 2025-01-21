@@ -1,11 +1,13 @@
 "use client"
-import { useState } from "react";  // Import useState
+import { useState } from "react";  
 import DynamicForm from "@/components/ui/dynamicForm";
 import Breadcrumb from "@/components/website/Breadcrumb";
-import { Button } from "@/components/ui/button";
+import {
+  LucidePlus, LucideDelete
+} from 'lucide-react';
+import AboutUsDetails from "@/components/dashboard/aboutUsDetails";
 
 export default function Page() {
-  const [form, setForm] = useState(false);
 
   const breadcrumbItems = [
     {
@@ -13,43 +15,18 @@ export default function Page() {
       href: "/admin/about-us",
     },
   ];
-
-  const formElements = [
-    {
-      name: "title",
-      label: "Title",
-      type: "text",
-      placeholder: "Enter the title",
-    },
-    {
-      name: "description",
-      label: "Description",
-      type: "textarea",
-      placeholder: "Enter the description",
-    },
-    {
-      name: "picture",
-      label: "Picture URL",
-      type: "text",
-      placeholder: "Enter the image URL",
-    },
-  ];
-
-  const handleFormSubmit = (data) => {
-    console.log("Form Data Submitted:", data);
-  };
+  const HandleSubmit=()=>{
+console.log("submit")
+  }
+  
 
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
+      <AboutUsDetails></AboutUsDetails>
+      
 
-      <Button onClick={() => setForm(!form)}>Add</Button>
 
-      {form && (
-        <div className="w-full">
-          <DynamicForm elements={formElements} onSubmitAction={handleFormSubmit} />
-        </div>
-      )}
     </>
   );
 }
