@@ -5,23 +5,36 @@ export async function GET(req: NextRequest) {
   try {
     const id = req.nextUrl.pathname.split('/').pop() || '';
     const pool = await getDbPool();
-    // console.log("id", id)
-    let query = 'SELECT * FROM AboutUs';
+
+    // First, get the AboutUs data
+    let aboutUsQuery = 'SELECT * FROM AboutUs';
     if (id) {
-      query = 'SELECT * FROM AboutUs WHERE id = @id';
-    } else {
-      console.log("error")
+      aboutUsQuery = 'SELECT * FROM AboutUs WHERE id = @id';
     }
 
-    const result = await pool.request()
+    const aboutUsResult = await pool.request()
       .input('id', id)
-      .query(query);
-    const AboutUs = result.recordset[0];
-    // console.log("AboutUs", AboutUs)
+      .query(aboutUsQuery);
+    
+    const aboutUs = id ? aboutUsResult.recordset[0] : aboutUsResult.recordset;
 
-    return NextResponse.json(AboutUs);
+    // Then, get the AboutUsDetails data
+    if (id) {
+      const detailsQuery = 'SELECT d.*, i.IconName FROM AboutUsDetails d LEFT JOIN Icons i ON d.icon_id = i.IconID WHERE d.aboutus_id = @id';
+      const detailsResult = await pool.request()
+        .input('id', id)
+        .query(detailsQuery);
 
+      // Combine the results
+      return NextResponse.json({
+        ...aboutUs,
+        aboutUsDetails: detailsResult.recordset
+      });
+    }
+
+    return NextResponse.json(aboutUs);
   } catch (error) {
+    console.error("Error fetching AboutUs data:", error);
     return NextResponse.json({ error: 'Failed to fetch AboutUs data' }, { status: 500 });
   }
 }
@@ -30,68 +43,75 @@ export async function PUT(req: NextRequest) {
   try {
     const id = req.nextUrl.pathname.split('/').pop() || '';
     if (!id) {
-      return NextResponse.json({ error: 'id is missing in the request' }, { status: 400 });
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
     const { aboutUsData, aboutUsDetailsData } = await req.json();
+    console.log("Received data:", { aboutUsData, aboutUsDetailsData });
+
+    if (!aboutUsData) {
+      return NextResponse.json({ error: 'AboutUs data is required' }, { status: 400 });
+    }
+
     const pool = await getDbPool();
     const transaction = pool.transaction();
-    await transaction.begin();
 
-    // Step 1: Update the About Us table if data has changed
-    const { title, description, picture, name } = aboutUsData;
-    const updates = [];
-    console.log("aboutus", aboutUsData)
+    try {
+      await transaction.begin();
 
-    if (name !== ''||null) updates.push({ field: 'name', value: name });
-    if (title !== ''||null) updates.push({ field: 'title', value: title });
-    if (description !== ''||null) updates.push({ field: 'description', value: description });
-    if (picture !== ''||null) updates.push({ field: 'picture', value: picture });
+      // Update AboutUs table
+      const { name, title, description, picture } = aboutUsData;
+      const updates = [];
 
-    if (updates.length > 0) {
-      let setClause = updates.map((update) => `${update.field} = @${update.field}`).join(', ');
-      let query = `UPDATE AboutUs SET ${setClause} WHERE id = @id`;
+      if (name !== undefined && name !== null) updates.push({ field: 'name', value: name });
+      if (title !== undefined && title !== null) updates.push({ field: 'title', value: title });
+      if (description !== undefined && description !== null) updates.push({ field: 'description', value: description });
+      if (picture !== undefined && picture !== null) updates.push({ field: 'picture', value: picture });
 
-      const request = transaction.request().input('id', id);
-      updates.forEach(update => request.input(update.field, update.value));
+      if (updates.length > 0) {
+        const setClause = updates.map((update) => `${update.field} = @${update.field}`).join(', ');
+        const query = `UPDATE AboutUs SET ${setClause} WHERE id = @id`;
 
-      await request.query(query);
-    }
-
-    // Step 2: Handle the About Us Details table (add, update, delete)
-    for (const detail of aboutUsDetailsData) {
-      console.log("aboutUsDetailsData",aboutUsDetailsData)
-      if (detail.DetailID) {
-        await transaction.request()
-          .input('DetailID', detail.DetailID)
-          .input('aboutus_id', id)
-          .input('title', detail.title)
-          .input('icon_id', detail.iconID)
-          .query('UPDATE AboutUsDetails SET title = @title, icon_id = @icon_id WHERE DetailID = @DetailID');
-      } else {
-        await transaction.request()
-          .input('aboutus_id', id)
-          .input('title', detail.title)
-          .input('icon_id', detail.iconID)
-          .query('INSERT INTO AboutUsDetails (aboutus_id, title, icon_id) VALUES (@aboutus_id, @title, @icon_id)');
+        const request = transaction.request().input('id', id);
+        updates.forEach(update => request.input(update.field, update.value));
+        await request.query(query);
       }
+
+      // Handle AboutUsDetails - Delete and reinsert pattern like Services
+      if (Array.isArray(aboutUsDetailsData)) {
+        // First, delete existing details
+        await transaction.request()
+          .input('aboutus_id', id)
+          .query('DELETE FROM AboutUsDetails WHERE aboutus_id = @aboutus_id');
+
+        // Then insert new details
+        for (const detail of aboutUsDetailsData) {
+          if (!detail.Title || !detail.IconID) continue;
+
+          await transaction.request()
+            .input('aboutus_id', id)
+            .input('title', detail.Title)
+            .input('icon_id', detail.IconID)
+            .query(`
+              INSERT INTO AboutUsDetails (aboutus_id, title, icon_id)
+              VALUES (@aboutus_id, @title, @icon_id)
+            `);
+        }
+      }
+
+      await transaction.commit();
+      return NextResponse.json({ message: 'Successfully updated AboutUs and AboutUs Details' });
+
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
     }
 
-    // Step 3: Handle deletions for About Us Details (if any DetailIDs are null or marked for deletion)
-    const detailsToDelete = aboutUsDetailsData.filter(detail => detail.isDeleted);
-    for (const detail of detailsToDelete) {
-      await transaction.request()
-        .input('DetailID', detail.DetailID)
-        .query('DELETE FROM AboutUsDetails WHERE DetailID = @DetailID');
-    }
-
-    // Commit the transaction
-    await transaction.commit();
-
-    return NextResponse.json({ message: 'Successfully updated About Us and About Us Details' });
   } catch (error) {
-    console.error("Error updating About Us data", error);
-    return NextResponse.json({ error: 'Failed to update About Us and About Us Details', details: (error as Error).message }, { status: 500 });
+    console.error("Error updating AboutUs data:", error);
+    return NextResponse.json({ 
+      error: 'Failed to update AboutUs and AboutUs Details', 
+      details: (error as Error).message 
+    }, { status: 500 });
   }
 }
-

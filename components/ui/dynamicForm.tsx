@@ -14,17 +14,17 @@ interface FormElement {
 
 interface DynamicFormProps {
     elements: FormElement[];
-    onSubmitAction: (data: Record<string, string>) => void;
+    onSubmitAction?: (data: Record<string, string>) => void;
     initialValues?: Record<string, string>;
 }
 
 export default function DynamicForm({ elements, onSubmitAction, initialValues = {} }: DynamicFormProps) {
     const [formData, setFormData] = useState<Record<string, string>>(initialValues);
+
     useEffect(() => {
         if (JSON.stringify(initialValues) !== JSON.stringify(formData)) {
             setFormData(initialValues);
         }
-
     }, [initialValues]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -37,6 +37,8 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (!onSubmitAction) return;
+
         const formData = new FormData(event.currentTarget);
         const data: Record<string, string> = {};
         formData.forEach((value, key) => {
@@ -46,14 +48,13 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
     };
 
     return (
-
-        <form onSubmit={handleSubmit} className="space-y-4 border-gray-200 border-2 p-5 mt-5">
-            <div className="flex justify-between flex-wrap mt-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {elements.map((element) => {
-                    const { name, label, type, placeholder, options, required, value } = element;
+                    const { name, label, type, placeholder, options, required } = element;
                     return (
-                        <div key={name} className=" w-64 flex flex-col mt-5">
-                            <label htmlFor={name} className="">
+                        <div key={name} className="flex flex-col space-y-1">
+                            <label htmlFor={name} className="text-sm font-medium text-gray-700">
                                 {label} {required && <span className="text-red-500">*</span>}
                             </label>
                             {type === "select" && options ? (
@@ -63,8 +64,9 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
                                     required={required}
                                     value={formData[name] || ""}
                                     onChange={handleInputChange}
-                                    className="border- rounded-md p-2"
+                                    className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                                 >
+                                    <option value="">Select {label}</option>
                                     {options.map((option) => (
                                         <option key={option} value={option}>
                                             {option}
@@ -79,7 +81,8 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
                                     required={required}
                                     value={formData[name] || ""}
                                     onChange={handleInputChange}
-                                    className="border rounded-md p-2"
+                                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+                                    rows={4}
                                 />
                             ) : (
                                 <input
@@ -90,23 +93,24 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
                                     required={required}
                                     value={formData[name] || ""}
                                     onChange={handleInputChange}
-                                    className="border rounded-md p-2"
+                                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                                 />
                             )}
                         </div>
                     );
                 })}
             </div>
-            <div className="flex justify-center mt-5">
-                <button
-                    type="submit"
-                    className="bg-gray-900 text-sm text-white px-4 py-2 rounded-md hover:bg-gray-700"
-                >
-                    Submit
-                </button>
-            </div>
 
+            {onSubmitAction && (
+                <div className="flex justify-end pt-4">
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    >
+                        Submit
+                    </button>
+                </div>
+            )}
         </form>
-
     );
 }

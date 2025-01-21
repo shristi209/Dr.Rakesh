@@ -1,5 +1,6 @@
 'use client'; 
 import React from 'react';
+import { LucideTrash2 } from 'lucide-react';
 
 interface DeleteButtonProps {
   userId: number;
@@ -33,9 +34,10 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({ userId }) => {
   return (
     <button
       onClick={handleDelete}
-      style={{ backgroundColor: 'red', color: 'white', padding: '10px', borderRadius: '2px', border: 'none' }}
+      className="inline-flex items-center justify-center bg-red-600 p-1.5 rounded-md hover:bg-red-700 transition duration-300"
+      title="Delete User"
     >
-      Delete
+      <LucideTrash2 className="w-4 h-4 text-white" />
     </button>
   );
 };

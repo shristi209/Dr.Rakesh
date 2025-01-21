@@ -1,20 +1,27 @@
 import Link from "next/link";
 
 interface AdminButtonProps {
-  Name?: string; 
   link: string;  
-  icon?: React.ReactElement; 
+  icon?: React.ReactElement;
+  title?: string;
+  Name?: string;
+  className?: string;
 }
 
-const AdminButton = ({ Name, link, icon }: AdminButtonProps) => {
-
+const AdminButton = ({ link, icon, title, Name, className }: AdminButtonProps) => {
+  const baseClasses = "inline-flex items-center justify-center rounded-md transition duration-300";
+  const iconClasses = "bg-gray-900 p-1.5 hover:bg-gray-700";
+  const textClasses = "px-4 py-1.5 text-white text-sm font-medium";
+  
   return (
-    <div className="flex items-center w-12 justify-center bg-gray-900 p-2 rounded-md hover:bg-gray-700 transition duration-300" >
-      {icon && <span className="mr-2">{icon}</span>}
-      <Link href={link} className="text-white text-sm font-semibold">
-        {Name}
-      </Link>
-    </div>
+    <Link 
+      href={link} 
+      className={`${baseClasses} ${Name ? textClasses : iconClasses} ${className || ''}`}
+      title={title}
+    >
+      {icon}
+      {Name && <span>{Name}</span>}
+    </Link>
   );
 };
 
