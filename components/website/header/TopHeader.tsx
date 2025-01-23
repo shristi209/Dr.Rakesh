@@ -1,59 +1,63 @@
-import {
-  Facebook,
-  Instagram,
-  Mail,
-  MapPin,
-  Phone,
-  Twitter,
-} from "lucide-react";
+
+import { Phone, Mail, Clock ,Facebook, Twitter, Instagram} from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { ContactInformation } from "@/app/api/apicontact";
 
-export default function TopHeader() {
+interface TopHeaderProps {
+  contactInformation: ContactInformation;
+}
+
+export default function TopHeader({ contactInformation }: TopHeaderProps) {
+
   return (
     <div className="bg-emerald-600 py-2 text-white">
-      <div className="container flex items-center justify-around md:justify-between px-4">
-        <div className="flex items-center gap-6 text-xs md:text-sm">
-          <div className="flex items-center gap-2">
-            <Phone className="h-4 w-4" />
-            <a href="tel:+9779809627872" target="_blank">
-              +977-9809627872
-            </a>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between items-center space-y-2 sm:space-y-0">
+        <div className="flex flex-wrap items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            <Phone className="w-4 h-4" />
+            <Link 
+              href={`tel:${contactInformation.phone}`} 
+              className="hover:underline"
+            >
+              {contactInformation.phone}
+            </Link>
           </div>
-
-          <div className="flex items-center gap-2 text-xs md:text-sm ">
-            <Mail className="h-4 w-4" />
-            <a href="mailto:drrakeshyad2073@gmail.com" target="_blank">
-              drrakeshyadav2073@gmail.com
-            </a>
-          </div>
-
-          <div className="hidden items-center md:text-sm gap-2 lg:flex">
-            <MapPin className="h-4 w-4" />
-            <span>Prayag Adhikari Health Care & Hospital</span>
+          <div className="flex items-center space-x-2">
+            <Mail className="w-4 h-4" />
+            <Link 
+              href={`mailto:${contactInformation.email}`} 
+              className="hover:underline"
+            >
+              {contactInformation.email}
+            </Link>
           </div>
         </div>
         <div className="items-center gap-4 hidden md:flex ">
           <Link
-            href="https://www.facebook.com/profile.php?id=61566765223666&mibextid=LQQJ4d"
+            href={contactInformation?.facebook || "#"}
             target="_blank"
             className="hover:text-emerald-200"
           >
             <Facebook className="h-4 w-4" />
             <span className="sr-only">Facebook</span>
           </Link>
-          <Link href="#" className="hover:text-emerald-200">
+          <Link 
+            href={contactInformation?.twitter || "#"} 
+            className="hover:text-emerald-200"
+            target="_blank"
+          >
             <Twitter className="h-4 w-4" />
             <span className="sr-only">Twitter</span>
           </Link>
-          <Link href="#" className="hover:text-emerald-200">
+          <Link 
+            href={contactInformation?.instagram || "#"} 
+            className="hover:text-emerald-200"
+            target="_blank"
+          >
             <Instagram className="h-4 w-4" />
             <span className="sr-only">Instagram</span>
           </Link>
-          {/* <Link href="#" className="hover:text-emerald-200">
-            <Youtube className="h-4 w-4" />
-            <span className="sr-only">YouTube</span>
-          </Link> */}
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    const id = req.nextUrl.pathname.split('/').pop() || '';
+    const id = 1;
     const pool = await getDbPool();
 
     let query = 'SELECT * FROM Contact';

@@ -1,7 +1,7 @@
 "use client";
 
 import DynamicForm from "@/components/ui/dynamicForm";
-import Breadcrumb from "@/components/website/Breadcrumb";
+import {Breadcrumb} from "@/components/website/Breadcrumb";
 import { useRouter, usePathname } from "next/navigation";
 import data from "../../../../../../public/data/updateUser.json";  
 import axios from "axios";

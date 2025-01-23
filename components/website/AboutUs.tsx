@@ -1,19 +1,45 @@
-import { Apple, Dumbbell, SmilePlus } from "lucide-react";
+import { Apple, Dumbbell, SmilePlus, Heart } from "lucide-react";
 import Image from "next/image";
-import AboutImage from "../../public/assests/Physiocare - Physiotherapy HTML Template_files/about-img.jpg";
+import { AboutData } from "@/app/api/apiaboutus";
 import { AppointmentButton2 } from "./AppointmentButton";
 
-export default function AboutUs() {
+interface AboutUsProps {
+  data?: AboutData | null;
+}
+
+export default function AboutUs({ data }: AboutUsProps) {
+  const iconMap: { [key: string]: React.ReactNode } = {
+    Heart: <Heart className="w-6 h-6 text-emerald-600" />,
+    Apple: <Apple className="w-6 h-6 text-emerald-600" />,
+    Dumbbell: <Dumbbell className="w-6 h-6 text-emerald-600" />,
+    SmilePlus: <SmilePlus className="w-6 h-6 text-emerald-600" />,
+
+    // Add more icons here as needed
+  };
+
+  // Log the received data for debugging
+  console.log('AboutUs Component - Received Data:', data);
+
+  // Default values in case data is not provided
+  // const defaultImage = '/assets/about-img.jpg';
+  // const defaultTitle = 'We Are The Best For';
+  // const defaultSubTitle = 'Orthopaedics & Traumatology';
+  // const defaultDescription = `Dr. Rakesh Kumar Yadav, MBBS, MS-Orthopaedics, is a distinguished
+  //   orthopedic surgeon with extensive expertise in musculoskeletal
+  //   health and care. A dedicated professional, he has completed
+  //   prestigious fellowships in various subspecialties of orthopedics,
+  //   enhancing his skills in advanced surgical techniques, trauma
+  //   management, joint replacement, and sports medicine.`;
+  const defaultExperience = '15+';
+  const imageUrl = data?.picture || '/assets/about-img.jpg';
   return (
     <div className="pt-[13px]">
-      {/* <Breadcrumb pageName="About Us" /> */}
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="relative rounded-2xl overflow-hidden">
             <Image
-              src={AboutImage}
-              alt="Physiotherapy session"
+              src={imageUrl}
+              alt="About Us Image"
               width={800}
               height={600}
               className="w-full h-[600px] object-cover"
@@ -21,7 +47,7 @@ export default function AboutUs() {
             <div className="absolute bottom-8 left-8 bg-white rounded-xl p-4 shadow-lg">
               <div className="flex items-center gap-2">
                 <div className="text-emerald-600">
-                  <span className="text-4xl font-bold">15+</span>
+                  <span className="text-4xl font-bold">{defaultExperience}</span>
                 </div>
                 <div className="text-gray-600">
                   <p className="text-sm">Years Of</p>
@@ -34,93 +60,59 @@ export default function AboutUs() {
           <div className="space-y-8">
             <div>
               <span className="inline-block bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full text-sm font-medium">
-                About Us
+                {data?.name}
               </span>
             </div>
 
-            <h1 className="text-5xl font-bold text-gray-900 leading-tight">
-              We Are The Best For{" "}
-              <span className="text-emerald-600 text-4xl ">
-                Orthopaedics & Traumatology
-              </span>
+            <h1 className="text-4xl font-bold text-gray-900 leading-tight">
+              {data?.title ? (() => {
+                const words = data.title.split(' ');
+                const regularWords = words.slice(0, -3).join(' ');
+                const emeraldWords = words.slice(-3).join(' ');
+                return (
+                  <>
+                    {regularWords ? `${regularWords} ` : ''}
+                    <span className="text-emerald-600">{emeraldWords || data.title}</span>
+                  </>
+                );
+              })() : 'About Us'}
             </h1>
 
-            <p className="text-gray-600 text-base text-justify ">
-              Dr. Rakesh Kumar Yadav, MBBS, MS-Orthopaedics, is a distinguished
-              orthopedic surgeon with extensive expertise in musculoskeletal
-              health and care. A dedicated professional, he has completed
-              prestigious fellowships in various subspecialties of orthopedics,
-              enhancing his skills in advanced surgical techniques, trauma
-              management, joint replacement, and sports medicine. Known for his
-              patient-centric approach, Dr. Yadav is committed to providing
-              comprehensive and personalized care, ensuring optimal recovery and
-              mobility for his patients. With a blend of academic rigor and
-              clinical excellence, he continues to contribute to the field
-              through innovation, research, and mentorship, upholding the
-              highest standards in orthopedic practice.
+            <p className="text-gray-600 text-base text-justify">
+              {data?.description}
             </p>
 
             <div className="grid grid-cols-2 gap-8">
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-emerald-100 rounded-lg">
-                  <Apple className="w-6 h-6 text-emerald-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">
-                    Nutrition Strategies
-                  </h3>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-emerald-100 rounded-lg">
-                  <SmilePlus className="w-6 h-6 text-emerald-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Be Pro Active</h3>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-emerald-100 rounded-lg">
-                  <Dumbbell className="w-6 h-6 text-emerald-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">
-                    Workout Routines
-                  </h3>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="p-3 bg-emerald-100 rounded-lg">
-                  <SmilePlus className="w-6 h-6 text-emerald-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">
-                    Support & Motivation
-                  </h3>
-                </div>
-              </div>
+              {/* Render details or default icons */}
+              {data?.details && data.details.length > 0 ? (
+                data.details.map((detail, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="p-3 bg-emerald-100 rounded-lg">
+                      {iconMap[detail.IconName] || <div className="w-6 h-6 text-gray-600">Icon not found</div>}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">
+                        {(() => {
+                          const words = detail.title.split(' ');
+                          const regularWords = words.slice(0, -3).join(' ');
+                          const emeraldWords = words.slice(-3).join(' ');
+                          return (
+                            <>
+                              {regularWords ? `${regularWords} ` : ''}
+                              <span className="text-emerald-600">{emeraldWords || detail.title}</span>
+                            </>
+                          );
+                        })()}
+                      </h3>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-gray-600">No details available</div>
+              )}
             </div>
 
             <div className="flex items-center justify-center">
-              {/* <div className="flex items-center gap-4">
-                <Image
-                  src={aboutDoctorImage}
-                  alt="Dr. Jamie Smith"
-                  width={56}
-                  height={56}
-                  className="rounded-full"
-                />
-                <div>
-                  <h3 className="font-semibold text-gray-900">
-                    Dr. Jamie Smith
-                  </h3>
-                  <p className="text-emerald-600">Physiotherapy</p>
-                </div>
-              </div> */}
-
               <AppointmentButton2 />
             </div>
           </div>

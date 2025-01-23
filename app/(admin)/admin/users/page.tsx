@@ -1,6 +1,6 @@
 import AdminButton from "@/components/dashboard/button";
 import DeleteButton from "@/components/ui/deleteButton";
-import Breadcrumb from "@/components/website/Breadcrumb";
+import {Breadcrumb} from "@/components/website/Breadcrumb";
 import axios from "axios";
 import {
   LucideUsers,

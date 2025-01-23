@@ -1,10 +1,10 @@
 import ContactForm from "@/components/dashboard/contactform";
-import Breadcrumb from "@/components/website/Breadcrumb";
+import {Breadcrumb} from "@/components/website/Breadcrumb";
 
 const breadcrumbItems = [
   {
-    label: "Edir Website Contact",
-    href: "/admin/contact/1",
+    label: "Edit Website Contact",
+    href: "/admin/contact",
   },
 ];
 

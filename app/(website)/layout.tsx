@@ -7,17 +7,30 @@ import MobileNav from "@/components/website/header/MobileNav";
 import LoginRegisterButton from "@/components/modal/LoginRegistrationButton";
 import { Phone } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { getContactData } from "@/app/api/apicontact";
+import { ContactInformation } from "@/app/api/apicontact";
 
-export default function WebsiteLayout({
+export default async function WebsiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const contactInformation = await getContactData(1) || {
+    location: '',
+    email: '',
+    phone: '',
+    emergency_num: '',
+    working_hours: '',
+    facebook: '',
+    instagram: '',
+    twitter: ''
+  };
+
   return (
     <>
       <header>
         <div className="fixed left-0 right-0 z-50">
-          <TopHeader />
+          <TopHeader contactInformation={contactInformation} />
 
           {/* Navigation */}
           {/* <header className="border-b bg-white py-2 md:py-4"> */}
@@ -39,41 +52,44 @@ export default function WebsiteLayout({
                 </div> */}
 
           {/* Desktop Navigation */}
-          <div className="flex justify-between container mx-auto px-2 md:px-4 border-b bg-white py-2 md:py-4 ">
-            <div className=" flex justify-center items-center">
-              <nav>
-                <ul className="flex items-center gap-6">
-                  <li>
-                    <NavLink href="/">Home</NavLink>
-                  </li>
-                  <li>
-                    <NavLink href="/about-us">About Us</NavLink>
-                  </li>
-                  <li>
-                    <NavLink href="/services">Services</NavLink>
-                  </li>
-                  <li>
-                    <NavLink href="/contact">Contact Us</NavLink>
-                  </li>
-                </ul>
-              </nav>
-            </div>
+          <div className="md:px-4 border-b bg-white py-2 md:py-4">
+            <div className="flex justify-between max-w-7xl mx-auto px-4 ">
+              <div className="flex justify-center items-center">
+                <nav>
+                  <ul className="flex items-center gap-6">
+                    <li>
+                      <NavLink href="/">Home</NavLink>
+                    </li>
+                    <li>
+                      <NavLink href="/about-us">About Us</NavLink>
+                    </li>
+                    <li>
+                      <NavLink href="/services">Services</NavLink>
+                    </li>
+                    <li>
+                      <NavLink href="/contact">Contact Us</NavLink>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
 
-            <div className="flex items-center gap-4">
-              <Button className="hidden text-white items-center bg-emerald-600 hover:bg-emerald-700 hover:font-bold md:flex">
-                <Phone className="h-4 w-4" />
-                <a href="tel:+9779809627872" target="_blank">
-                  +977-9809627872
-                </a>
-              </Button>
-              <LoginRegisterButton></LoginRegisterButton>
-
-              <MobileNav />
+              <div className="flex items-center gap-4">
+                {contactInformation?.phone && (
+                  <Button className="hidden text-white items-center bg-emerald-600 hover:bg-emerald-700 hover:font-bold md:flex">
+                    <Phone className="h-4 w-4" />
+                    <a href={`tel:${contactInformation.phone}`} target="_blank">
+                      {contactInformation.phone}
+                    </a>
+                  </Button>
+                )}
+                <div className=" md:flex">
+                  <LoginRegisterButton></LoginRegisterButton>
+                </div>
+                <MobileNav />
+              </div>
             </div>
           </div>
         </div>
-        {/* </header> */}
-        {/* </div> */}
       </header>
 
       {/* Main Section */}
@@ -81,7 +97,7 @@ export default function WebsiteLayout({
 
       {/* Footer */}
       <footer>
-        <Footer />
+        {contactInformation && <Footer contactInformation={contactInformation} />}
         <BackToTop />
       </footer>
     </>

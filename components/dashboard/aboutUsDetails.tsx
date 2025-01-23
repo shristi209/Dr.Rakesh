@@ -14,6 +14,7 @@ interface AboutUsDetail {
   DetailID?: number;
   Title: string;
   IconID: number;
+  IconName?: string;
   isDeleted?: boolean;
 }
 
@@ -41,10 +42,11 @@ const AboutUsDetails = () => {
         setInitialAboutUsData(response.data);
         
         if (response.data.aboutUsDetails && Array.isArray(response.data.aboutUsDetails)) {
-          setSavedDetails(response.data.aboutUsDetails.map((detail: AboutUsDetail) => ({
+          setSavedDetails(response.data.aboutUsDetails.map((detail: any) => ({
             DetailID: detail.DetailID,
-            Title: detail.Title,
-            IconID: detail.IconID
+            Title: detail.title,
+            IconID: detail.icon_id,
+            IconName: detail.IconName
           })));
         }
         
@@ -62,7 +64,18 @@ const AboutUsDetails = () => {
     const fetchIcons = async () => {
       try {
         const response = await axios.get("/api/admin/icons");
-        setIcons(response.data);
+        console.log("Fetched Icons:", response.data);
+        
+        // Ensure icons are valid
+        const validIcons = response.data.filter((icon: Icon) => 
+          icon.IconID && icon.IconName
+        );
+        
+        setIcons(validIcons);
+        
+        if (validIcons.length === 0) {
+          console.warn("No valid icons found");
+        }
       } catch (error) {
         console.error("Error fetching Icons", error);
         setError("Failed to load icons");
@@ -322,7 +335,24 @@ const AboutUsDetails = () => {
                           </select>
                         ) : (
                           <span className="text-sm text-gray-900">
-                            {icons.find(icon => icon.IconID === detail.IconID)?.IconName || 'Unknown Icon'}
+                            {(() => {
+                              // First, check if IconName is directly available from the detail
+                              if (detail.IconName) {
+                                return detail.IconName;
+                              }
+
+                              // If not, fall back to finding icon in icons array
+                              const foundIcon = icons.find(icon => icon.IconID === detail.IconID);
+                              
+                              console.log('Searching for icon:', {
+                                detailIconId: detail.IconID, 
+                                availableIcons: icons.map(i => ({id: i.IconID, name: i.IconName}))
+                              });
+                              
+                              return foundIcon 
+                                ? foundIcon.IconName 
+                                : `Unknown Icon (ID: ${detail.IconID})`
+                            })()}
                           </span>
                         )}
                       </td>

@@ -1,7 +1,7 @@
 [
     {
         "name": "Name",
-        "label": " Name",
+        "label": "Name",
         "type": "text",
         "required": true
     },

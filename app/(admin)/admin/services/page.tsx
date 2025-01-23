@@ -1,4 +1,4 @@
-import Breadcrumb from "@/components/website/Breadcrumb";
+import {Breadcrumb} from "@/components/website/Breadcrumb";
 import ServicesDetails from "@/components/dashboard/servicesDetails";
 
 export default function Page() {

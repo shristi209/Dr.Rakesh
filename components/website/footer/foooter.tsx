@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   Facebook,
   Twitter,
-  Linkedin,
   Instagram,
   Phone,
   Mail,
@@ -10,8 +9,13 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import orthopedicSurgeonImage from "../../../public/assests/FRHSJuly23-3002.jpg";
+import { ContactInformation } from "@/app/api/apicontact";
 
-export default function Footer() {
+interface FooterProps {
+  contactInformation: ContactInformation;
+}
+
+export default function Footer({ contactInformation }: FooterProps) {
   return (
     <footer className="bg-[#1b3a2d] text-white pb-8 md:pb-0 ">
       <div className="container mx-auto px-4 py-12">
@@ -21,9 +25,7 @@ export default function Footer() {
             <div className="flex items-center space-x-2">
               <div className="w-10 md:w-14 h-10 md:h-14 bg-white rounded-full">
                 <Image
-                
                   src={orthopedicSurgeonImage}
-                  
                   alt="Physiocare Logo"
                   width={40}
                   height={40}
@@ -40,18 +42,21 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4">
               <Link
-                href="https://www.facebook.com/profile.php?id=61566765223666&mibextid=LQQJ4d"
+                href={contactInformation.facebook}
                 className="hover:text-[#8fa5a0] transition-colors"
               >
                 <Facebook className="w-5 h-5" />
               </Link>
-              <Link href="#" className="hover:text-[#8fa5a0] transition-colors">
+              <Link
+                href={contactInformation.twitter}
+                className="hover:text-[#8fa5a0] transition-colors"
+              >
                 <Twitter className="w-5 h-5" />
               </Link>
-              <Link href="#" className="hover:text-[#8fa5a0] transition-colors">
-                <Linkedin className="w-5 h-5" />
-              </Link>
-              <Link href="#" className="hover:text-[#8fa5a0] transition-colors">
+              <Link
+                href={contactInformation.instagram}
+                className="hover:text-[#8fa5a0] transition-colors"
+              >
                 <Instagram className="w-5 h-5" />
               </Link>
             </div>
@@ -61,9 +66,9 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-xl text-[#8fa5a0]">Working Hours</h3>
             <div className="space-y-2">
-              <p>Sun To Thu : 10:00 AM To 6:00 PM </p>
-              <p>Fri : 10:00 AM To 3:00 PM</p>
-              <p>Sat : Closed</p>
+              {contactInformation.working_hours.split("\n").map((hour, index) => (
+                <p key={index}>{hour}</p>
+              ))}
             </div>
           </div>
 
@@ -97,20 +102,20 @@ export default function Footer() {
             <h3 className="text-xl text-[#8fa5a0]">Contact</h3>
             <div className="space-y-4">
               <div className="flex items-center space-x-3">
+                <MapPin className="w-5 h-5 text-[#8fa5a0]" />
+                <span>{contactInformation.location}</span>
+              </div>
+              <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-[#8fa5a0]" />
-                <a href="tel:+9779809627872" target="_blank">
-                  +977-9809627872
+                <a href={`tel:${contactInformation.phone}`} target="_blank">
+                  {contactInformation.phone}
                 </a>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-[#8fa5a0]" />
-                <a href="mailto:drrakeshyad2073@gmail.com" target="_blank">
-                  drrakeshyadav2073@gmail.com
+                <a href={`mailto:${contactInformation.email}`} target="_blank">
+                  {contactInformation.email}
                 </a>
-              </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5 text-[#8fa5a0]" />
-                <span>Prayag Adhikari Health Care & Hospital</span>
               </div>
             </div>
           </div>

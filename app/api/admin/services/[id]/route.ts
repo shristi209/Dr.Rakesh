@@ -107,6 +107,6 @@ export async function PUT(req: NextRequest) {
     }
   } catch (error) {
     console.error("Error updating Services data:", error);
-    return NextResponse.json({ error: 'Failed to update Services and Services Details', details: error.message }, { status: 500 });
+    throw error;
   }
 }

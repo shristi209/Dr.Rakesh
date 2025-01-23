@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import LoginRegisterButton from "@/components/modal/LoginRegistrationButton";
 
 export default function MobileNav() {
   const pathname = usePathname();
@@ -59,6 +60,7 @@ export default function MobileNav() {
                 <Phone className="h-4 w-4" />
                 <a href="tel:+9779809627872">+977-9809627872</a>
               </Button>
+              <LoginRegisterButton></LoginRegisterButton>
             </nav>
           </SheetContent>
         </Sheet>

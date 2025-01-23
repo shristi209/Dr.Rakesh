@@ -1,7 +1,7 @@
 "use client"
 
 import DynamicForm from "@/components/ui/dynamicForm";
-import Breadcrumb from "@/components/website/Breadcrumb";
+import { Breadcrumb } from "@/components/website/Breadcrumb";
 import { useRouter } from "next/navigation";
 import data from '../../../../../public/data/addUser.json'
 import axios from "axios";
@@ -21,6 +21,11 @@ export default function Page() {
   const router = useRouter();
   const handleFormSubmit = async (data: Record<string, string>) => {
     console.log("Form Data:", data);
+
+    if (data.password !== data.confirmPassword) {
+      alert("Password and Confirm Password do not match.");
+      return;
+    }
 
     const response = await axios.post("/api/admin/users", data, {
       headers: {

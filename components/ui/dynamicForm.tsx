@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface FormElement {
     name: string;
@@ -14,12 +14,22 @@ interface FormElement {
 
 interface DynamicFormProps {
     elements: FormElement[];
-    onSubmitAction?: (data: Record<string, string>) => void;
+    onSubmitAction?: (data: Record<string, string | File>) => void;
     initialValues?: Record<string, string>;
 }
 
 export default function DynamicForm({ elements, onSubmitAction, initialValues = {} }: DynamicFormProps) {
     const [formData, setFormData] = useState<Record<string, string>>(initialValues);
+    const fileInputRefs = useRef<Record<string, React.RefObject<HTMLInputElement>>>({});
+
+    // Initialize refs for file inputs
+    useEffect(() => {
+        elements.forEach((element) => {
+            if (element.type === 'file') {
+                fileInputRefs.current[element.name] = React.createRef<HTMLInputElement>();
+            }
+        });
+    }, [elements]);
 
     useEffect(() => {
         if (JSON.stringify(initialValues) !== JSON.stringify(formData)) {
@@ -28,11 +38,20 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
     }, [initialValues]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, value } = event.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
+        const { name, value, type, files } = event.target as HTMLInputElement;
+        
+        // Special handling for file inputs
+        if (type === 'file' && files && files.length > 0) {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: files[0].name, // Store filename
+            }));
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -40,9 +59,9 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
         if (!onSubmitAction) return;
 
         const formData = new FormData(event.currentTarget);
-        const data: Record<string, string> = {};
+        const data: Record<string, string | File> = {};
         formData.forEach((value, key) => {
-            data[key] = value as string;
+            data[key] = value as string | File;
         });
         onSubmitAction(data);
     };
@@ -83,6 +102,16 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
                                     onChange={handleInputChange}
                                     className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                                     rows={4}
+                                />
+                            ) : type === "file" ? (
+                                <input
+                                    id={name}
+                                    name={name}
+                                    type="file"
+                                    placeholder={placeholder}
+                                    required={required}
+                                    onChange={handleInputChange}
+                                    className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                                 />
                             ) : (
                                 <input

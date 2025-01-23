@@ -1,6 +1,7 @@
 import sql from 'mssql';
+import tls from 'node:tls';
 
-const config = {
+const config: sql.config = {
     user: 'medimasteradmin',
     password: 'medimasteradmin',
     server: '62.72.43.153',
@@ -9,17 +10,25 @@ const config = {
     options: {
         instancename: 'SQLEXPRESS',
         encrypt: true,
-        trustedconnection: true,
-        trustServerCertificate: true
+        trustServerCertificate: true,
+        cryptoCredentialsDetails: {
+            minVersion: 'TLSv1.2',
+            maxVersion: 'TLSv1.3'
+        }
     },
+    authentication: {
+        type: 'default'
+    }
 }
 
 let pool: sql.ConnectionPool;
 
-
 export const getDbPool = async () => {
     if (!pool) {
       try {
+        // Explicitly set TLS options
+        (tls as any).DEFAULT_MIN_VERSION = 'TLSv1.2';
+        
         pool = await sql.connect(config);
         console.log('Database connected successfully');
       } catch (error) {
@@ -28,4 +37,4 @@ export const getDbPool = async () => {
       }
     }
     return pool;
-  };
+};

@@ -25,7 +25,6 @@ const LoginRegisterButton: React.FC = () => {
         <div>
             {isLoggedIn ? (
                 <ProfileButton title={'Dashboard'} link={'/admin'}/>
-
             ) : (
                 <>
                     <Button
