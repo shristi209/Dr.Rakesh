@@ -103,7 +103,7 @@ const SignUpForm: React.FC<{ switchToLogin: () => void }> = ({ switchToLogin }) 
               type={type}
               name={name}
               placeholder={placeholder}
-              value={(formData as any)[name]}
+              value={(formData as any)[name] || ''}
               onChange={handleChange}
               className={`border p-2 rounded w-full ${
                 errors[name] ? 'border-red-500' : 'border-gray-300'

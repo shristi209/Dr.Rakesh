@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Lock } from 'lucide-react';
+import { User, Lock, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 
 const LoginForm: React.FC = () => {
@@ -8,13 +8,18 @@ const LoginForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [showPassword, setShowPassword] = useState(false);
+
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const validateForm = () => {
@@ -65,24 +70,37 @@ const LoginForm: React.FC = () => {
         },
         {
           name: 'password',
-          type: 'password',
+          type: showPassword ? 'text' : 'password',
           placeholder: 'Password',
           icon: <Lock className="text-gray-500" />,
         },
       ].map(({ name, type, placeholder, icon }) => (
-        <div key={name}>
+        <div key={name} className="relative">
           <div className="flex items-center space-x-2">
             {icon}
             <input
               type={type}
               name={name}
               placeholder={placeholder}
-              value={(formData as any)[name]}
+              value={(formData as any)[name] || ''}
               onChange={handleChange}
               className={`border p-2 rounded w-full ${
                 errors[name] ? 'border-red-500' : 'border-gray-300'
-              }`}
+              } ${name === 'password' ? 'pr-10' : ''}`}
             />
+            {name === 'password' && (
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 focus:outline-none"
+              >
+                {showPassword ? (
+                  <Eye className="text-gray-500 w-5 h-5" />
+                ) : (
+                  <EyeOff className="text-gray-500 w-5 h-5" />
+                )}
+              </button>
+            )}
           </div>
           {errors[name] && <p className="text-red-500 text-sm">{errors[name]}</p>}
         </div>

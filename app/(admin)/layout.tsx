@@ -2,13 +2,9 @@ import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import {
   LucideHome,
-  LucideUsers,
-  LucideSettings,
-  LucideBarChart,
   LucideLogOut,
 } from 'lucide-react';
 import Header from '@/components/dashboard/header/header';
-import Cookies from 'js-cookie';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -33,8 +29,7 @@ export default function AdminLayout({
           <div className="p-4 border-t border-gray-800">
             <Link
               href="/"
-              className="flex items-center space-x-3 text-gray-300 hover:bg-gray-800 rounded-md px-3 py-2"
->
+              className="flex items-center space-x-3 text-gray-300 hover:bg-gray-800 rounded-md px-3 py-2">
               <LucideLogOut className="w-5 h-5" />
               <span>Logout</span>
             </Link>

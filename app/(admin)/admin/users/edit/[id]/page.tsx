@@ -6,6 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import data from "../../../../../../public/data/updateUser.json";  
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { wrapFormSubmit } from "@/lib/form-utils";
 
 export default function Page() {
   const router = useRouter();
@@ -67,7 +68,11 @@ export default function Page() {
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <DynamicForm elements={data.elements} onSubmitAction={handleFormSubmit} initialValues={userData} />
+      <DynamicForm 
+        elements={data.elements} 
+        onSubmitAction={wrapFormSubmit(handleFormSubmit)} 
+        initialValues={userData} 
+      />
     </>
   );
 }

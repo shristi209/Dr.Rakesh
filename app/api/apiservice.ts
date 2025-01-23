@@ -8,7 +8,6 @@ export interface ServiceDetailData {
   Picture: string;
   services_id: number;
 }
-
 export interface ServiceData {
   id: number;
   Title: string;
@@ -17,8 +16,12 @@ export interface ServiceData {
 
   details: ServiceDetailData[];
 }
+export interface ServiceShortData {
+  Title: string;
+}
 
-export async function getServices(): Promise<ServiceData> {
+
+export async function getServices(): Promise<ServiceData | null> {
   try {
     const pool = await getDbPool();
     const query = `
@@ -55,3 +58,23 @@ export async function getServices(): Promise<ServiceData> {
     throw error;
   }
 }
+
+// export async function getServicesName(): Promise<ServiceShortData[]> {
+//   try {
+//     const pool = await getDbPool();
+
+//     const detailQuery = `
+//       SELECT Title
+//       FROM ServicesDetail
+//     `;
+//     console.log('Executing detail query:', detailQuery);
+//     const detailData = await pool.request().query(detailQuery);
+
+//     return detailData.recordset.map((detail: { Title: string }) => ({
+//       Title: detail.Title,
+//     }));
+//   } catch (error) {
+//     console.error('Error fetching services:', error);
+//     throw error;
+//   }
+// }

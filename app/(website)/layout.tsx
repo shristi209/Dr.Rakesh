@@ -69,6 +69,9 @@ export default async function WebsiteLayout({
                     <li>
                       <NavLink href="/contact">Contact Us</NavLink>
                     </li>
+                    <li>
+                      <NavLink href="/appointment">Book Appointment</NavLink>
+                    </li>
                   </ul>
                 </nav>
               </div>

@@ -1,7 +1,13 @@
 import Image from "next/image";
 import hero from "../../public/assests/rakeshYadav.png";
 import { AppointmentButton, ExploreServices } from "./AppointmentButton";
-export default function Main() {
+import { siteSetting } from "@/app/api/apihome";
+
+interface MainProps {
+  data?: any;
+}
+
+export default function Main({ data }: MainProps) {
   return (
     <>
       {/* Hero Section */}
@@ -11,14 +17,13 @@ export default function Main() {
           <div className="grid items-center gap-8 lg:grid-cols-2">
             <div className=" space-y-2 md:space-y-4">
               <h1 className="text-2xl font-bold   text-gray-900 md:text-4xl  text-nowrap ">
-                Dr. Rakesh Kr. Yadav
+                {data.name}
               </h1>
               <p className="text-xl font-semibold text-emerald-600">
-              MBBS, MS-Orthopaedics  Surgeon
+              {data.specialist}
               </p>
               <p className="max-w-[600px] text-gray-600 md:text-base text-sm text-justify md:text-nowrap pb-4 ">
-                Fellowship in Arthroscopic Surgery(India), Fellowship in
-                Ilizarov Surgery (Kurgan)
+              {data.description}
               </p>
               <div className="flex flex-wrap md:gap-8 ">
                 <div className="hidden text-white md:block">
@@ -47,26 +52,28 @@ export default function Main() {
             </div>
             <div className="relative">
               <Image
-                src={hero}
+                src={data.image}
                 alt="Medical Professional"
                 width={500}
                 height={500}
-                className="rounded-full"
+                className="w-full h-auto rounded-lg"
                 priority
               />
               <div className="absolute bottom-4 left-4 flex items-center gap-3 rounded-full bg-white p-3 shadow-lg">
                 <Image
-                  src={hero}
+                  src={data.image}
                   alt="Dr. Jamie Smith"
                   width={48}
                   height={48}
-                  className="h-12 w-12 rounded-full"
+                  className="rounded-full"
                 />
                 <div>
-                  <div className="font-semibold">DR. Rakesh Kumar Yadav</div>
-                  <div className="text-sm text-gray-600">
-                    Orthopedic Surgeon
-                  </div>
+                  <p className="text-sm font-semibold text-gray-800">
+                    {data.name}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {data.specialist}
+                  </p>
                 </div>
               </div>
             </div>

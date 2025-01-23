@@ -5,6 +5,7 @@ import { Breadcrumb } from "@/components/website/Breadcrumb";
 import { useRouter } from "next/navigation";
 import data from '../../../../../public/data/addUser.json'
 import axios from "axios";
+import { wrapFormSubmit } from "@/lib/form-utils";
 
 export default function Page() {
   const breadcrumbItems = [
@@ -19,32 +20,31 @@ export default function Page() {
   ];
 
   const router = useRouter();
-  const handleFormSubmit = async (data: Record<string, string>) => {
-    console.log("Form Data:", data);
+  const handleFormSubmit = async (formData: Record<string, string>) => {
+    try {
+      const response = await axios.post("/api/admin/users", formData, {
+        headers: { "Content-Type": "application/json" },
+      });
 
-    if (data.password !== data.confirmPassword) {
-      alert("Password and Confirm Password do not match.");
-      return;
+      if (response.status === 201) {
+        alert("User added successfully!");
+        router.push("/admin/users");
+      } else {
+        alert("Failed to add user.");
+      }
+    } catch (error) {
+      console.error("Error adding user:", error);
+      alert("An error occurred while adding the user!");
     }
-
-    const response = await axios.post("/api/admin/users", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.status === 200) {
-      alert("User added successfully!");
-      router.push("/admin/users");
-    } else {
-      alert("Failed to add user!");
-    }
-  }
+  };
 
   return (
     <>
-      <Breadcrumb items={breadcrumbItems}></Breadcrumb>
-      <DynamicForm elements={data.elements} onSubmitAction={handleFormSubmit}></DynamicForm>
+      <Breadcrumb items={breadcrumbItems} />
+      <DynamicForm 
+        elements={data.elements} 
+        onSubmitAction={wrapFormSubmit(handleFormSubmit)} 
+      />
     </>
   )
 }
