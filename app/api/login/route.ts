@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { getDbPool } from '../../../admin/utils/db';
+import { generateUniqueSlug } from '@/admin/utils/generateSlug';
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
       .query('SELECT * FROM Users WHERE email = @email');
 
     const user = result.recordset[0];
-    console.log(user)
+  
     if (!user) {
       return NextResponse.json({ message: 'Invalid email or password' }, { status: 401 });
     }
@@ -29,19 +30,16 @@ export async function POST(req: NextRequest) {
     if (!passwordMatch) {
       return NextResponse.json({ message: 'Invalid email or password' }, { status: 401 });
     }
-    console.log("JWT_SECRET_KEY")
     if (!process.env.JWT_SECRET_KEY) {
       throw new Error('JWT_SECRET_KEY is not defined');
     }
-  console.log(user)
-    const token = jwt.sign(
-      { id: user.id, name: user.name, email: user.email, role: user.role },
-      process.env.JWT_SECRET_KEY!
+    
+    const userSlug = generateUniqueSlug(user.name);
 
-    //  process.env.JWT_SECRET_KEY!
-      
-      ,
-      { expiresIn: '1h', algorithm: 'HS256'  }
+    const token = jwt.sign(
+      { id: user.id, name: user.name, email: user.email, role: user.role, slug: userSlug},
+      process.env.JWT_SECRET_KEY!,
+      { expiresIn: '1h', algorithm: 'HS256' }
     );
 
     const response = NextResponse.json(

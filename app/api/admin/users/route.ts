@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
 
       return NextResponse.json(user);
     }
-    const result = await pool.request().query('SELECT * FROM Users');
+    const result = await pool.request().query('SELECT * FROM Users ORDER BY id DESC');
     return NextResponse.json(result.recordset);
   } catch (error) {
     const typedError = error as Error;

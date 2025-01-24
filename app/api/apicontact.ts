@@ -17,10 +17,8 @@ export async function getContactData(contactId: number): Promise<ContactInformat
     const query = `
       SELECT TOP 1 id, location, email, phone, emergency_num, working_hours, facebook, instagram, twitter
       FROM Contact
-      WHERE id = @contactId
     `;
-    console.log('Executing contact query:', query);
-    const result = await pool.request().input('contactId', contactId).query(query);
+    const result = await pool.request().query(query);
     const contact = result.recordset[0];
 
     return contact || null;

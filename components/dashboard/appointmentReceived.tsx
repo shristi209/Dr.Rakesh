@@ -8,9 +8,9 @@ interface AppointDataProps {
 const AppointmentReceived = ({ appointmentData }: AppointDataProps) => {
     if (!appointmentData || appointmentData.length === 0) {
         return <div>No appointment data available.</div>;
-      }
+    }
     
-  console.log("datareceived", appointmentData)
+    console.log("datareceived", appointmentData)
     return (
       <div className="mt-3 bg-white rounded-lg shadow-md overflow-hidden">
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
@@ -19,7 +19,7 @@ const AppointmentReceived = ({ appointmentData }: AppointDataProps) => {
         <div className="p-6">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead>
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full Name</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
@@ -37,9 +37,17 @@ const AppointmentReceived = ({ appointmentData }: AppointDataProps) => {
                     <td className="px-6 py-4 text-sm text-gray-900">{detail.email}</td>
                     <td className="px-6 py-4 text-sm text-gray-900">{detail.phonenumber}</td>
                     <td className="px-6 py-4 text-sm text-gray-900">{detail.service}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{detail.date}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{detail.time}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900">{detail.note}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {detail.date instanceof Date 
+                        ? detail.date.toLocaleDateString() 
+                        : String(detail.date)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">
+                      {detail.time instanceof Date 
+                        ? detail.time.toLocaleTimeString() 
+                        : String(detail.time)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-900">{detail.note || '-'}</td>
                   </tr>
                 ))}
               </tbody>
