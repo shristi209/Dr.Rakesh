@@ -45,7 +45,6 @@ export async function getAboutData(): Promise<AboutData | null> {
       .input('id', aboutData.id)
       .query(detailQuery);
 
-    // Log detail result for debugging
     console.log('AboutUs Details:', detailResult.recordset);
 
     return {

@@ -97,7 +97,7 @@ const Appointments = async () => {
                         </div>
 
                         <div className="mb-4">
-                            <label htmlFor="servicedetail_id" className="block text-gray-700">Service</label>
+                            <label htmlFor="services" className="block text-gray-700">Service</label>
                             <select
                                 id="service"
                                 name="service"

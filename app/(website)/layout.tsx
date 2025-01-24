@@ -67,10 +67,10 @@ export default async function WebsiteLayout({
                       <NavLink href="/services">Services</NavLink>
                     </li>
                     <li>
-                      <NavLink href="/contact">Contact Us</NavLink>
+                      <NavLink href="/appointment">Appointment</NavLink>
                     </li>
                     <li>
-                      <NavLink href="/appointment">Book Appointment</NavLink>
+                      <NavLink href="/contact">Contact Us</NavLink>
                     </li>
                   </ul>
                 </nav>
