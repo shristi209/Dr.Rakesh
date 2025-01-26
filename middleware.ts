@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
             const userSlug = payload.slug;
 
             if (userSlug && pathSegments[2] !== userSlug) {
-                return NextResponse.redirect(new URL(`/patientappointment/${userSlug}`, request.url));
+                return NextResponse.redirect(new URL(`/patientappointment/${userSlug}/appointments`, request.url));
             }
         }
 

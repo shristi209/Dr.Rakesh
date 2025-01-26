@@ -49,12 +49,7 @@ export default async function AdminDashboard() {
       name: 'Total Services',
       value: servicesCount,
       icon: LucideHeartPulse,
-    },
-    {
-      name: 'Conversion Rate',
-      value: '3.24%',
-      icon: LucideBarChart,
-    },
+    }
   ];
 
   const activities = [
@@ -65,17 +60,11 @@ export default async function AdminDashboard() {
       time: '5 min ago',
     },
     {
-      icon: LucideDollarSign,
-      title: 'New subscription',
-      description: 'Pro plan subscription purchased',
-      time: '1 hour ago',
-    },
-    {
       icon: LucideActivity,
-      title: 'System update',
-      description: 'Successfully deployed version 2.1.0',
-      time: '2 hours ago',
-    },
+      title: 'New Appointment',
+      description: 'New Appointment Booked',
+      time: '1 hour ago',
+    }
   ];
 
   return (

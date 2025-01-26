@@ -9,7 +9,6 @@ interface PageProps {
 
 export default async function Page() {
   const appointData = await getAppointment();
-  // console.log(appointData);
   const breadcrumbItems = [
     {
       label: "Appointments",

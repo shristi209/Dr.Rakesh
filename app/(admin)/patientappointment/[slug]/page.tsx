@@ -1,21 +1,51 @@
+import { AppointData, getAppointmentById } from '@/app/api/appointment/route';
+import { jwtVerify } from 'jose';
 import {
+  LucideTimer,
   LucideUsers,
   LucideDollarSign,
   LucideHeartPulse,
 } from 'lucide-react';
+import { cookies } from 'next/headers';
 
+interface PageProps {
+  appointData: AppointData[];
+  error: string | null;
+}
 
 export default async function PatientPage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
+
+  let appointData: AppointData[] = [];
+  let latestAppointment: AppointData | null = null;
+
+  if (token) {
+    const secretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY);
+    const { payload } = await jwtVerify(token, secretKey) as { payload: { email: string } };
+
+    appointData = await getAppointmentById(payload.email);
+    
+    // Get the most recent appointment
+    if (appointData.length > 0) {
+      latestAppointment = appointData[0];
+    }
+  }
 
   const stats = [
     {
-      name: 'Total Patients',
-      value: '100',
+      name: 'Total Appointments',
+      value: appointData.length.toString(),
       icon: LucideUsers,
     },
     {
-      name: 'Total Services',
-      value: '50',
+      name: 'Appointment Date',
+      value: latestAppointment?.date ? String(latestAppointment.date) : 'No upcoming appointments',
+      icon: LucideTimer,
+    },
+    {
+      name: 'Appointment Time',
+      value: latestAppointment?.time ? String(latestAppointment.time) : 'No upcoming appointments',
       icon: LucideHeartPulse,
     }
   ];
@@ -38,20 +68,15 @@ export default async function PatientPage() {
   return (
     <div className="space-y-8">
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-sm p-6 border"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">{stat.name}</p>
-                <p className="text-2xl font-semibold mt-1">{stat.value}</p>
-              </div>
-              <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                <stat.icon className="w-6 h-6 text-primary" />
-              </div>
+          <div key={index} className="bg-white p-4 rounded-lg shadow-md flex items-center">
+            <div className="mr-4">
+              <stat.icon className="w-8 h-8" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">{stat.name}</p>
+              <p className="text-xl font-bold">{stat.value}</p>
             </div>
           </div>
         ))}

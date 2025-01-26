@@ -1,5 +1,5 @@
 import { Breadcrumb } from "@/components/website/Breadcrumb";
-import AppointmentReceived from "@/components/dashboard/appointmentReceived";
+import AppointmentsReceivedByPatient from "@/components/dashboard/appointmentsReceivedByPatient"; // Capitalized import
 import { AppointData, getAppointmentById } from "@/app/api/appointment/route";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
@@ -12,7 +12,7 @@ interface PageProps {
 
 export default async function Page() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
+  const token = cookieStore.get("token")?.value;
 
   let appointData: AppointData[] = [];
   let error: string | null = null;
@@ -24,10 +24,11 @@ export default async function Page() {
 
       appointData = await getAppointmentById(payload.email);
     } catch (err) {
-      console.error('Error fetching appointments:', err);
-      error = 'Failed to fetch appointments';
+      console.error("Error fetching appointments:", err);
+      error = "Failed to fetch appointments";
     }
   }
+
   const slug = useSlug();
   const breadcrumbItems = [
     {
@@ -39,9 +40,7 @@ export default async function Page() {
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <AppointmentReceived
-        appointmentData={appointData}
-      />
+      <AppointmentsReceivedByPatient appointmentData={appointData} />
     </>
   );
 }

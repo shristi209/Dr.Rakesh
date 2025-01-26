@@ -10,13 +10,14 @@ export interface AppointData{
   date: string | Date;
   time: string | Date;
   note?: string;
+  status?:string;
 }
 
 export async function getAppointment(): Promise<AppointData[]> {
   try {
     const pool = await getDbPool();
     const query = `
-      SELECT id, fullname, email, phonenumber, service, date, time, note from Appointment
+      SELECT id, fullname, email, phonenumber, service, date, time, note, status from Appointment
       ORDER BY id DESC
     `;
     const detailResult = await pool.request().query(query);
@@ -55,7 +56,7 @@ export async function getAppointmentById(userEmail: string): Promise<AppointData
   try {
     const pool = await getDbPool();
     const query = `
-      SELECT id, fullname, email, phonenumber, service, date, time, note 
+      SELECT id, fullname, email, phonenumber, service, date, time, note , status
       FROM Appointment 
       WHERE email = @userEmail
       ORDER BY date DESC, time DESC
@@ -138,3 +139,4 @@ export async function POST(req: NextRequest) {
 function getCookie() {
   throw new Error('Function not implemented.');
 }
+

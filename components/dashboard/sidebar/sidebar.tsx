@@ -10,7 +10,7 @@ import {
   LucideContact 
 } from "lucide-react";
 import SideBar from "@/components/ui/sidebar";
-import { useClientSlug } from '@/hooks/useclientslug';
+import { useClientSlug } from '@/hooks/useClientSlug';
 
 interface SidebarProps {
   role: "admin" | "patient";

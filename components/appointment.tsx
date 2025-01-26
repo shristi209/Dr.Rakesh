@@ -7,6 +7,7 @@ const Appointments = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [token, setToken] = useState<string | null>(null);
     const [showLoginMessage, setShowLoginMessage] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     useEffect(() => {
         const getCookieValue = (name: string) => {
@@ -52,7 +53,7 @@ const Appointments = () => {
         try {
             const response = await axios.post("/api/appointment", values);
             if (response.data.success) {
-                console.log("Appointment booked successfully!");
+                setIsSuccess(true);
             } else {
                 console.error("Failed to book appointment");
             }
@@ -70,12 +71,15 @@ const Appointments = () => {
 
     return (
         <>
-            {!token && <Modal isOpen={isModalOpen} closeModal={closeModal} />}
+            {isModalOpen && !token && <Modal isOpen={isModalOpen} closeModal={closeModal} />}
+
             {showLoginMessage && (
                 <div className="text-center text-red-500 mt-4">
                     Please login before booking an appointment.
                 </div>
-            )}            {token && (
+            )}
+
+            {!isSuccess && token && (
                 <div className="container mx-auto px-4 py-8 md:pt-20">
                     <div className="mx-auto max-w-3xl">
                         <div className="mb-8 text-center">
@@ -188,6 +192,22 @@ const Appointments = () => {
                                     Book Appointment
                                 </button>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Success message after appointment is booked */}
+            {isSuccess && (
+                <div className="container mx-auto px-4 py-8 md:pt-20">
+                    <div className="mx-auto max-w-3xl">
+                        <div className="mb-8 text-center">
+                            <div className="p-6 bg-green-100 text-green-800 rounded-lg shadow-md">
+                                <h2 className="text-2xl font-semibold">Successfully Booked!</h2>
+                                <p className="mt-4 text-lg">
+                                    Your appointment has been successfully booked! For further notice, please visit your dashboard from your profile.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
