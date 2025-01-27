@@ -96,7 +96,13 @@ export async function getAppointmentById(userEmail: string): Promise<AppointData
 
 export async function POST(req: NextRequest) {
   try {
-    const { fullname, email, phonenumber, service, date, time, note } = await req.json();
+    const { fullname, email, phonenumber, service, date, time, note, user_id } = await req.json();
+    console.log("Received data:", { fullname, email, phonenumber, service, date, time, note, user_id });
+
+    if (!user_id) {
+      return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
+    }
+
     const pool = await getDbPool();
     const query = `
       INSERT INTO Appointment (
@@ -106,7 +112,8 @@ export async function POST(req: NextRequest) {
         service,
         date,
         time,
-        note
+        note,
+        user_id
       )
       VALUES (
         @fullname,
@@ -115,7 +122,8 @@ export async function POST(req: NextRequest) {
         @service,
         @date,
         @time,
-        @note
+        @note,
+        @user_id
       );
     `;
 
@@ -126,7 +134,8 @@ export async function POST(req: NextRequest) {
       .input('service', service)
       .input('date', date)
       .input('time', time)
-      .input('note', note)
+      .input('note', note || null)
+      .input('user_id', user_id)
       .query(query);
 
     return NextResponse.json({ success: true, message: 'Appointment booked successfully!' });
@@ -139,4 +148,3 @@ export async function POST(req: NextRequest) {
 function getCookie() {
   throw new Error('Function not implemented.');
 }
-

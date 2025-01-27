@@ -28,27 +28,28 @@ export default async function AdminLayout({
     redirect('/');
   }
 
-  const slug = useSlug();
-
   return (
     <div className={`${inter.className} min-h-screen bg-gray-50`}>
       {/* Sidebar */}
       <aside className="fixed inset-y-0 left-0 bg-gray-900 w-64 z-50">
         <div className="flex flex-col h-full">
           <div className="flex items-center h-16 px-6 border-b border-gray-800">
-            <Link href={userRole === 'admin' ? '/admin' : `/patientappointment/${slug}`} className="flex items-center space-x-2">
+            <Link href={userRole === 'admin' ? '/admin' : `/patientappointment/${useSlug()}`} className="flex items-center space-x-2">
               <LucideHome className="w-6 h-6 text-white" />
               <span className="font-bold text-xl text-white">Dr. Rakesh</span>
             </Link>
           </div>
           <Sidebar role={userRole}></Sidebar>
           <div className="p-4 border-t border-gray-800">
-            <Link
-              href="/logout"
-              className="flex items-center space-x-3 text-gray-300 hover:bg-gray-800 rounded-md px-3 py-2">
-              <LucideLogOut className="w-5 h-5" />
-              <span>Logout</span>
-            </Link>
+            <form action="/api/logout" method="POST">
+              <button 
+                type="submit" 
+                className="flex items-center space-x-2 text-white hover:bg-gray-700 w-full p-2 rounded-md transition-colors"
+              >
+                <LucideLogOut className="w-5 h-5" />
+                <span>Logout</span>
+              </button>
+            </form>
           </div>
         </div>
       </aside>

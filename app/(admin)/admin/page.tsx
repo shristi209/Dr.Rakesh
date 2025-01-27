@@ -1,4 +1,5 @@
 import { getDbPool } from "@/admin/utils/db";
+import Editor from "@/components/ui/Editor";
 import {
   LucideUsers,
   LucideBarChart,
@@ -88,7 +89,7 @@ export default async function AdminDashboard() {
           </div>
         ))}
       </div>
-
+<Editor/>
       {/* Recent Activity */}
       <div className="bg-white rounded-lg shadow-sm border">
         <div className="p-6 border-b">

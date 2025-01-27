@@ -49,7 +49,7 @@ const AboutUsDetails = () => {
             IconName: detail.IconName
           })));
         }
-        
+
         setLoading(false);
       } catch (error) {
         console.error("Error fetching About Us data", error);
@@ -147,7 +147,10 @@ const AboutUsDetails = () => {
         
         const response = await axios.put(`/api/admin/about-us/${aboutUsId}`, {
           aboutUsData: res,
-          aboutUsDetailsData: updatedDetails
+          aboutUsDetailsData: updatedDetails.map(detail => ({
+            ...detail,
+            Title: detail.Title.trim()
+          }))
         });
         
         console.log("Delete response:", response.data);

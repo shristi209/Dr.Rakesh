@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const servicesResult = await pool.request()
       .input('id', id)
       .query(servicesQuery);
-    
+
     const services = id ? servicesResult.recordset[0] : servicesResult.recordset;
 
     // Then, get the ServicesDetail data
@@ -45,9 +45,7 @@ export async function PUT(req: NextRequest) {
     if (!id) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
-
     const { servicesData, servicesDetailsData } = await req.json();
-    console.log("Received data:", { servicesData, servicesDetailsData });
 
     if (!servicesData) {
       return NextResponse.json({ error: 'Services data is required' }, { status: 400 });
@@ -59,13 +57,14 @@ export async function PUT(req: NextRequest) {
     try {
       await transaction.begin();
 
-      // Update Services table
       const { Name, Title, Description } = servicesData;
+
       const updates = [];
 
       if (Title !== undefined && Title !== null) updates.push({ field: 'Title', value: Title });
       if (Description !== undefined && Description !== null) updates.push({ field: 'Description', value: Description });
       if (Name !== undefined && Name !== null) updates.push({ field: 'Name', value: Name });
+
 
       if (updates.length > 0) {
         const setClause = updates.map((update) => `${update.field} = @${update.field}`).join(', ');
@@ -76,27 +75,40 @@ export async function PUT(req: NextRequest) {
         await request.query(query);
       }
 
-      // Handle ServicesDetails
       if (Array.isArray(servicesDetailsData)) {
-        // First, delete existing details
         await transaction.request()
           .input('services_id', id)
           .query('DELETE FROM ServicesDetail WHERE services_id = @services_id');
 
-        // Then insert new details
         for (const detail of servicesDetailsData) {
-          if (!detail.Title || !detail.Description) continue;
+          if (!detail.Title || !detail.Description) {
+            console.warn(`Skipping invalid service detail: ${JSON.stringify(detail)}`);
+            continue;
+          }
 
-          await transaction.request()
-            .input('services_id', id)
-            .input('Title', detail.Title)
-            .input('Description', detail.Description)
-            .input('Picture', detail.Picture || null)
-            .query(`
-              INSERT INTO ServicesDetail (services_id, Title, Description, Picture)
-              VALUES (@services_id, @Title, @Description, @Picture)
-            `);
+          try {
+            const insertResult = await transaction.request()
+              .input('services_id', id)
+              .input('Title', detail.Title)
+              .input('Description', detail.Description)
+              .input('Picture', detail.Picture || null)
+              .query(`
+                INSERT INTO ServicesDetail (services_id, Picture, Title, Description)
+                VALUES (@services_id, @Picture, @Title, @Description)
+              `);
+
+            console.log(`Successfully inserted service detail: ${detail.Title}`);
+          } catch (insertError) {
+            console.error('Error inserting ServicesDetail:', {
+              detail: detail,
+              fullError: JSON.stringify(insertError, null, 2)
+            });
+
+            throw insertError;
+          }
         }
+      } else {
+        console.warn('servicesDetailsData is not an array:', servicesDetailsData);
       }
 
       await transaction.commit();

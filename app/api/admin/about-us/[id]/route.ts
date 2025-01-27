@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const aboutUsResult = await pool.request()
       .input('id', id)
       .query(aboutUsQuery);
-    
+
     const aboutUs = id ? aboutUsResult.recordset[0] : aboutUsResult.recordset;
 
     // Then, get the AboutUsDetails data
@@ -76,7 +76,7 @@ export async function PUT(req: NextRequest) {
         updates.forEach(update => request.input(update.field, update.value));
         await request.query(query);
       }
-
+      // console.log("Updated AboutUs data:", aboutUsDetailsData);
       // Handle AboutUsDetails - Delete and reinsert pattern like Services
       if (Array.isArray(aboutUsDetailsData)) {
         // First, delete existing details
@@ -86,8 +86,9 @@ export async function PUT(req: NextRequest) {
 
         // Then insert new details
         for (const detail of aboutUsDetailsData) {
-          if (!detail.Title || !detail.IconID) continue;
+          console.log("Inserting detail:", detail.IconID);
 
+          if (!detail.Title || !detail.IconID) continue;
           await transaction.request()
             .input('aboutus_id', id)
             .input('title', detail.Title)
@@ -109,9 +110,9 @@ export async function PUT(req: NextRequest) {
 
   } catch (error) {
     console.error("Error updating AboutUs data:", error);
-    return NextResponse.json({ 
-      error: 'Failed to update AboutUs and AboutUs Details', 
-      details: (error as Error).message 
+    return NextResponse.json({
+      error: 'Failed to update AboutUs and AboutUs Details',
+      details: (error as Error).message
     }, { status: 500 });
   }
 }

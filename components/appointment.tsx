@@ -2,12 +2,14 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "./modal/Modal";
+import useAuth from '../hooks/useAuth'; 
 
 const Appointments = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [token, setToken] = useState<string | null>(null);
     const [showLoginMessage, setShowLoginMessage] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const { user, error: authError } = useAuth();
 
     useEffect(() => {
         const getCookieValue = (name: string) => {
@@ -44,11 +46,20 @@ const Appointments = () => {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
+        if (!user) {
+            console.error('User not authenticated');
+            alert('Please login before booking an appointment');
+            return;
+        }
+
         const formData = new FormData(event.target as HTMLFormElement);
         const values: Record<string, string> = {};
         formData.forEach((value, key) => {
             values[key] = value.toString();
         });
+
+        values['user_id'] = user.id;
+        console.log("User ID being sent:", values['user_id']);
 
         try {
             const response = await axios.post("/api/appointment", values);
@@ -56,9 +67,11 @@ const Appointments = () => {
                 setIsSuccess(true);
             } else {
                 console.error("Failed to book appointment");
+                alert("Failed to book appointment. Please try again.");
             }
         } catch (error) {
             console.error("Error submitting appointment:", error);
+            alert("An error occurred while booking the appointment.");
         }
     };
 

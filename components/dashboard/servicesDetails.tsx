@@ -142,29 +142,24 @@ const ServicesDetails = () => {
   const handleSubmit = async (formData: any) => {
     try {
       const hasChanges =
-        formData.name !== initialServicesData?.name ||
-        formData.title !== initialServicesData?.title ||
-        formData.description !== initialServicesData?.description;
+        formData.Name !== initialServicesData?.Name ||
+        formData.Title !== initialServicesData?.Title ||
+        formData.Description !== initialServicesData?.Description;
+console.log("rows",rows)
 
-      if (hasChanges || rows.some((row) => row.Title || row.Description || row.Picture)) {
+      if (hasChanges || rows.some((row) => row.Title && row.Description && row.Picture)) {
         const servicesId = 1;
-        const newDetails = rows.filter(row => row.Title && row.Description);
-        
+        const newDetails = rows.filter(row => row.Title && row.Description && row.Picture);
+// console.log("newDetails",newDetails)
+// console.log("savedDetails",savedDetails)
         const response = await axios.put(`/api/admin/services/${servicesId}`, {
           servicesData: formData,
-          servicesDetailsData: [...savedDetails, ...newDetails.map(row => ({
-            ...row,
-            Title: row.Title.trim(),
-            Description: row.Description.trim(),
-            Picture: row.Picture.trim() || null
-          }))]
+          servicesDetailsData: [...savedDetails, ...newDetails]
         });
         
         console.log("Submit response:", response.data);
         
-        // Update saved details
         setSavedDetails(prev => [...prev, ...newDetails]);
-        // Clear the input rows
         setRows([{ Title: "", Description: "", Picture: "" }]);
         
         alert("Data updated successfully!");

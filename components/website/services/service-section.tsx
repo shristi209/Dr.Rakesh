@@ -47,7 +47,7 @@ export function ServicesSection({ serviceData }: ServicesSectionProps) {
               <p className="text-gray-600">No service details available at the moment.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div key="services-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {serviceData.details.map((detail) => (
                 <ServiceCard
                   key={detail.DetailID}

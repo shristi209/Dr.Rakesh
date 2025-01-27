@@ -37,7 +37,7 @@ const Sidebar = ({ role }: SidebarProps) => {
         {role === "patient" && slug && (
           <>
             <SideBar title={"Appointments"} link={`/patientappointment/${slug}/appointments`} icon={LucideNotebook} />
-            <SideBar title={"Profile"} link={`/patientappointment/${slug}/profile`} icon={LucideUsers} />
+            {/* <SideBar title={"Profile"} link={`/patientappointment/${slug}/profile`} icon={LucideUsers} /> */}
           </>
         )}
       </ul>

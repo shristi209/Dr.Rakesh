@@ -1,8 +1,7 @@
 "use client"
-
 import DynamicForm from "@/components/ui/dynamicForm";
 import { Breadcrumb } from "@/components/website/Breadcrumb";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import data from '../../../../../public/data/addUser.json'
 import axios from "axios";
 import { wrapFormSubmit } from "@/lib/form-utils";
@@ -19,7 +18,6 @@ export default function Page() {
     },
   ];
 
-  const router = useRouter();
   const handleFormSubmit = async (formData: Record<string, string>) => {
     try {
       const response = await axios.post("/api/admin/users", formData, {
@@ -28,7 +26,7 @@ export default function Page() {
 
       if (response.status === 201) {
         alert("User added successfully!");
-        router.push("/admin/users");
+        redirect("/admin/users");
       } else {
         alert("Failed to add user.");
       }

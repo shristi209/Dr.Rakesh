@@ -1,6 +1,5 @@
 import { getDbPool } from "@/admin/utils/db";
 import { NextRequest, NextResponse } from "next/server";
-import bcrypt from 'bcrypt';
 
 export async function GET(req: NextRequest) {
   try {

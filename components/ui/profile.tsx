@@ -30,7 +30,7 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ title, link }) => {
       </button>
 
       {isModalOpen && (
-        <div className="absolute mr-3 mt-2 w-48 bg-white border rounded-lg shadow-lg">
+        <div className="absolute mt-2 w-48 bg-white border rounded-lg shadow-lg ">
           <ul className="flex flex-col p-2">
             <li className="p-2 hover:bg-gray-100 cursor-pointer">
               <Link href={link}>
