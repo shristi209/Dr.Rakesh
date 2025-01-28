@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 
 interface FormElement {
     name: string;
@@ -9,66 +9,52 @@ interface FormElement {
     placeholder?: string;
     options?: string[];
     required?: boolean;
-    value?: string;
 }
 
 interface DynamicFormProps {
     elements: FormElement[];
-    onSubmitAction?: (data: Record<string, string | File>) => void;
+    formData?: Record<string, string>;
     initialValues?: Record<string, string>;
+    onChange?: (data: Record<string, string>) => void;
+    onSubmitAction?: (data: Record<string, string>) => void;
+    className?: string;
 }
 
-export default function DynamicForm({ elements, onSubmitAction, initialValues = {} }: DynamicFormProps) {
-    const [formData, setFormData] = useState<Record<string, string>>(initialValues);
-    const fileInputRefs = useRef<Record<string, React.RefObject<HTMLInputElement>>>({});
-
-    // Initialize refs for file inputs
-    useEffect(() => {
-        elements.forEach((element) => {
-            if (element.type === 'file') {
-                fileInputRefs.current[element.name] = React.createRef<HTMLInputElement>();
-            }
-        });
-    }, [elements]);
-
-    useEffect(() => {
-        if (JSON.stringify(initialValues) !== JSON.stringify(formData)) {
-            setFormData(initialValues);
-        }
-    }, [initialValues]);
+export default function DynamicForm({
+    elements,
+    formData = {},
+    initialValues = {},
+    onChange,
+    onSubmitAction,
+    className = ""
+}: DynamicFormProps) {
+    const [localFormData, setLocalFormData] = useState<Record<string, string>>({
+        ...initialValues,
+        ...formData
+    });
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type, files } = event.target as HTMLInputElement;
-        
-        // Special handling for file inputs
+        const updatedFormData = { ...localFormData };
+
         if (type === 'file' && files && files.length > 0) {
-            setFormData((prevData) => ({
-                ...prevData,
-                [name]: files[0].name, // Store filename
-            }));
+            updatedFormData[name] = files[0].name;
         } else {
-            setFormData((prevData) => ({
-                ...prevData,
-                [name]: value,
-            }));
+            updatedFormData[name] = value;
         }
+
+        setLocalFormData(updatedFormData);
+        onChange?.({ ...updatedFormData });
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        if (!onSubmitAction) return;
-
-        const formData = new FormData(event.currentTarget);
-        const data: Record<string, string | File> = {};
-        formData.forEach((value, key) => {
-            data[key] = value as string | File;
-        });
-        onSubmitAction(data);
+        onSubmitAction?.(localFormData);
     };
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit}>
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${className}`}>
                 {elements.map((element) => {
                     const { name, label, type, placeholder, options, required } = element;
                     return (
@@ -81,7 +67,7 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
                                     id={name}
                                     name={name}
                                     required={required}
-                                    value={formData[name] || ""}
+                                    value={localFormData[name] || ""}
                                     onChange={handleInputChange}
                                     className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                                 >
@@ -98,7 +84,7 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
                                     name={name}
                                     placeholder={placeholder}
                                     required={required}
-                                    value={formData[name] || ""}
+                                    value={localFormData[name] || ""}
                                     onChange={handleInputChange}
                                     className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                                     rows={4}
@@ -120,7 +106,7 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
                                     type={type}
                                     placeholder={placeholder}
                                     required={required}
-                                    value={formData[name] || ""}
+                                    value={localFormData[name] || ""}
                                     onChange={handleInputChange}
                                     className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                                 />
@@ -129,17 +115,6 @@ export default function DynamicForm({ elements, onSubmitAction, initialValues = 
                     );
                 })}
             </div>
-
-            {onSubmitAction && (
-                <div className="flex justify-end pt-4">
-                    <button
-                        type="submit"
-                        className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                    >
-                        Submit
-                    </button>
-                </div>
-            )}
         </form>
     );
 }

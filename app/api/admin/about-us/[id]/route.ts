@@ -6,7 +6,6 @@ export async function GET(req: NextRequest) {
     const id = req.nextUrl.pathname.split('/').pop() || '';
     const pool = await getDbPool();
 
-    // First, get the AboutUs data
     let aboutUsQuery = 'SELECT * FROM AboutUs';
     if (id) {
       aboutUsQuery = 'SELECT * FROM AboutUs WHERE id = @id';
@@ -24,7 +23,7 @@ export async function GET(req: NextRequest) {
       const detailsResult = await pool.request()
         .input('id', id)
         .query(detailsQuery);
-
+// console.log(detailsResult.recordset);
       // Combine the results
       return NextResponse.json({
         ...aboutUs,

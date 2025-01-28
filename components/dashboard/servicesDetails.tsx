@@ -4,6 +4,7 @@ import DynamicForm from "../ui/dynamicForm";
 import axios from "axios";
 import formElements from "../../public/data/servicesForm.json";
 import { LucideDelete, LucidePlus, LucidePencil, LucideCheck, LucideX } from "lucide-react";
+import MultipleForm from "../ui/multipleForm";
 
 interface ServicesDetail {
   DetailID?: number;
@@ -71,14 +72,6 @@ const ServicesDetails = () => {
     }
   };
 
-  const handleAddClick = () => {
-    setRows([...rows, { Title: "", Description: "", Picture: "" }]);
-  };
-
-  const handleDeleteClick = (index: number) => {
-    const updatedRows = rows.filter((_, i) => i !== index);
-    setRows(updatedRows);
-  };
 
   const handleEditClick = (index: number) => {
     setEditMode(true);
@@ -141,19 +134,35 @@ const ServicesDetails = () => {
 
   const handleSubmit = async (formData: any) => {
     try {
+      // console.log("Full form data:", formData);
+
+      // Extract details from form data
+      const detailKeys = Object.keys(formData).filter(key => key.includes('details'));
+      const newDetails = detailKeys.map(key => {
+        try {
+          return JSON.parse(formData[key]);
+        } catch (error) {
+          console.error(`Error parsing details for key ${key}:`, error);
+          return [];
+        }
+      }).flat().filter((detail: any) => detail.Title && detail.Description && detail.Picture);
+
+      console.log("Parsed new details:", newDetails);
+
       const hasChanges =
         formData.Name !== initialServicesData?.Name ||
         formData.Title !== initialServicesData?.Title ||
-        formData.Description !== initialServicesData?.Description;
-console.log("rows",rows)
+        formData.Description !== initialServicesData?.Description ||
+        newDetails.length > 0;
 
-      if (hasChanges || rows.some((row) => row.Title && row.Description && row.Picture)) {
+      if (hasChanges) {
         const servicesId = 1;
-        const newDetails = rows.filter(row => row.Title && row.Description && row.Picture);
-// console.log("newDetails",newDetails)
-// console.log("savedDetails",savedDetails)
         const response = await axios.put(`/api/admin/services/${servicesId}`, {
-          servicesData: formData,
+          servicesData: {
+            Name: formData.Name,
+            Title: formData.Title,
+            Description: formData.Description
+          },
           servicesDetailsData: [...savedDetails, ...newDetails]
         });
         
@@ -172,6 +181,26 @@ console.log("rows",rows)
     }
   };
 
+  const additionalFormElements =[
+    {
+      name: "Title",
+      type: "text",
+      label: "Title",
+      placeholder: "Enter the title"
+    },
+    {
+      name: "Description",
+      type: "textarea",
+      label: "Description",
+      placeholder: "Enter the description"
+    },
+    {
+      name: "Picture",
+      type: "file",
+      label: "Picture",
+      placeholder: "Choose a file"
+    }
+  ]
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -189,85 +218,23 @@ console.log("rows",rows)
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="mt-5 max-w-5xl mx-auto space-y-8">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
           <h2 className="text-lg font-semibold text-gray-800">Services Information</h2>
         </div>
-        <div className="p-6">
-          <DynamicForm
+        <div>
+          <MultipleForm
             elements={formElements}
             onSubmitAction={handleSubmit}
             initialValues={res}
+            additionalForms={[
+              {
+                title: "Additional Details",
+                elements: additionalFormElements
+              }
+            ]}
           />
-        </div>
-      </div>
-
-      {/* Add New Details Section */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="border-b border-gray-200 bg-gray-50 px-6 py-4 flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-800">Add New Details</h2>
-          <button
-            onClick={handleAddClick}
-            className="inline-flex items-center justify-center p-1.5 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-          >
-            <LucidePlus className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="p-6">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Picture</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Action</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {rows.map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <input
-                        type="text"
-                        value={row.Title}
-                        placeholder="Add title"
-                        onChange={(e) => handleInputChange(index, "Title", e.target.value)}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-                      />
-                    </td>
-                    <td className="px-6 py-4">
-                      <textarea
-                        value={row.Description}
-                        placeholder="Add description"
-                        onChange={(e) => handleInputChange(index, "Description", e.target.value)}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-                      />
-                    </td>
-                    <td className="px-6 py-4">
-                      <input
-                        type="text"
-                        value={row.Picture}
-                        placeholder="Add picture URL"
-                        onChange={(e) => handleInputChange(index, "Picture", e.target.value)}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-                      />
-                    </td>
-                    <td className="px-6 py-4">
-                      <button
-                        onClick={() => handleDeleteClick(index)}
-                        className="text-red-600 hover:text-red-900 focus:outline-none"
-                      >
-                        <LucideDelete className="w-5 h-5" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
 

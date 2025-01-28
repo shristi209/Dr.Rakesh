@@ -4,6 +4,7 @@ import DynamicForm from "../ui/dynamicForm";
 import axios from "axios";
 import formElements from "../../public/data/aboutusForm.json";
 import { LucideDelete, LucidePlus, LucidePencil, LucideCheck, LucideX } from "lucide-react";
+import MultipleForm from "../ui/multipleForm";
 
 interface Icon {
   IconID: number;
@@ -37,10 +38,10 @@ const AboutUsDetails = () => {
         const aboutUsId = 1;
         const response = await axios.get(`/api/admin/about-us/${aboutUsId}`);
         console.log("Fetched Data:", response.data);
-        
+
         setRes(response.data);
         setInitialAboutUsData(response.data);
-        
+
         if (response.data.aboutUsDetails && Array.isArray(response.data.aboutUsDetails)) {
           setSavedDetails(response.data.aboutUsDetails.map((detail: any) => ({
             DetailID: detail.DetailID,
@@ -65,14 +66,14 @@ const AboutUsDetails = () => {
       try {
         const response = await axios.get("/api/admin/icons");
         console.log("Fetched Icons:", response.data);
-        
+
         // Ensure icons are valid
-        const validIcons = response.data.filter((icon: Icon) => 
+        const validIcons = response.data.filter((icon: Icon) =>
           icon.IconID && icon.IconName
         );
-        
+
         setIcons(validIcons);
-        
+
         if (validIcons.length === 0) {
           console.warn("No valid icons found");
         }
@@ -102,15 +103,6 @@ const AboutUsDetails = () => {
     }
   };
 
-  const handleAddClick = () => {
-    setRows([...rows, { Title: "", IconID: 0 }]);
-  };
-
-  const handleDeleteClick = (index: number) => {
-    const updatedRows = rows.filter((_, i) => i !== index);
-    setRows(updatedRows);
-  };
-
   const handleEditClick = (index: number) => {
     setEditMode(true);
     setEditingIndex(index);
@@ -128,7 +120,7 @@ const AboutUsDetails = () => {
         aboutUsData: res,
         aboutUsDetailsData: savedDetails
       });
-      
+
       console.log("Edit saved:", response.data);
       setEditMode(false);
       setEditingIndex(null);
@@ -144,7 +136,7 @@ const AboutUsDetails = () => {
       try {
         const aboutUsId = 1;
         const updatedDetails = savedDetails.filter((_, i) => i !== index);
-        
+
         const response = await axios.put(`/api/admin/about-us/${aboutUsId}`, {
           aboutUsData: res,
           aboutUsDetailsData: updatedDetails.map(detail => ({
@@ -152,7 +144,7 @@ const AboutUsDetails = () => {
             Title: detail.Title.trim()
           }))
         });
-        
+
         console.log("Delete response:", response.data);
         setSavedDetails(updatedDetails);
         alert("Detail deleted successfully!");
@@ -164,27 +156,86 @@ const AboutUsDetails = () => {
   };
 
   const handleSubmit = async (formData: any) => {
+    console.log("Full form data:", formData);
+    console.log("Initial About Us Data:", initialAboutUsData);
+    console.log("Available Icons:", icons);
+  
     try {
-      const hasChanges =
+      // Find keys that include 'details'
+      const detailKeys = Object.keys(formData).filter(key => key.includes('details'));
+  
+      const newDetails = detailKeys.flatMap(key => {
+        try {
+          const parsedDetails = JSON.parse(formData[key]);
+          console.log(`Parsed details for key ${key}:`, parsedDetails);
+  
+          return parsedDetails.map((detail: any) => {
+            // Find the corresponding icon
+            const foundIcon = icons.find(icon => 
+              icon.IconName === detail.icon_id || 
+              icon.IconID === detail.icon_id
+            );
+  
+            return {
+              Title: detail.title || detail.Title,
+              IconID: foundIcon ? foundIcon.IconID : 0,
+              IconName: foundIcon ? foundIcon.IconName : ''
+            };
+          });
+        } catch (error) {
+          console.error(`Error parsing details for key ${key}:`, error);
+          return [];
+        }
+      }).filter((detail: any) => detail.Title && detail.IconID);
+      
+      console.log("Parsed new details:", newDetails);
+  
+      // Comprehensive change detection
+      const hasMainDataChanges = 
         formData.name !== initialAboutUsData?.name ||
         formData.title !== initialAboutUsData?.title ||
         formData.description !== initialAboutUsData?.description ||
         formData.picture !== initialAboutUsData?.picture;
-
-      if (hasChanges || rows.some(row => row.Title && row.IconID)) {
+  
+      console.log("Main data changes:", {
+        name: formData.name !== initialAboutUsData?.name,
+        title: formData.title !== initialAboutUsData?.title,
+        description: formData.description !== initialAboutUsData?.description,
+        picture: formData.picture !== initialAboutUsData?.picture
+      });
+  
+      const hasDetailsChanges = 
+        JSON.stringify(newDetails) !== JSON.stringify(savedDetails);
+  
+      console.log("New details length:", newDetails.length);
+      console.log("Saved details:", savedDetails);
+      console.log("Details changed:", hasDetailsChanges);
+  
+      const hasChanges = hasMainDataChanges || hasDetailsChanges;
+  
+      console.log("Overall changes detected:", hasChanges);
+  
+      if (hasChanges) {
         const aboutUsId = 1;
-        const newDetails = rows.filter(row => row.Title && row.IconID);
         
         const response = await axios.put(`/api/admin/about-us/${aboutUsId}`, {
-          aboutUsData: formData,
+          aboutUsData: {
+            name: formData.name,
+            title: formData.title,
+            description: formData.description,
+            picture: formData.picture
+          },
           aboutUsDetailsData: [...savedDetails, ...newDetails]
         });
         
         console.log("Submit response:", response.data);
         
-        // Update saved details and clear input rows
+        // Update saved details and initial data
         setSavedDetails(prev => [...prev, ...newDetails]);
-        setRows([{ Title: "", IconID: 0 }]);
+        setInitialAboutUsData(prev => ({
+          ...prev,
+          aboutUsDetails: [...(prev.aboutUsDetails || []), ...newDetails]
+        }));
         
         alert("Data updated successfully!");
       } else {
@@ -211,83 +262,42 @@ const AboutUsDetails = () => {
       </div>
     );
   }
-
+  const additionalFormElements = [
+  {
+    name: "title",
+    type: "text",
+    label: "Title",
+    placeholder: "Enter the title"
+  },
+  {
+    name: "icon_id",
+    type: "select",
+    label: "Icon",
+    placeholder: "Select the Icon",
+    options: icons.map(icon => ({
+      id: icon.IconID,     // Database IconID
+      name: icon.IconName  // Display name
+    }))
+  }
+];
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="mt-5 max-w-5xl mx-auto space-y-8">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
           <h2 className="text-lg font-semibold text-gray-800">About Us Information</h2>
         </div>
-        <div className="p-6">
-          <DynamicForm
+        <div>
+          <MultipleForm
             elements={formElements}
             onSubmitAction={handleSubmit}
             initialValues={res}
+            additionalForms={[
+              {
+                title: "Additional Form",
+                elements: additionalFormElements,
+              }
+            ]}
           />
-        </div>
-      </div>
-
-      {/* Add New Details Section */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        <div className="border-b border-gray-200 bg-gray-50 px-6 py-4 flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-800">Add New Details</h2>
-          <button
-            onClick={handleAddClick}
-            className="inline-flex items-center justify-center p-1.5 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-          >
-            <LucidePlus className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="p-6">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Icon</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Action</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {rows.map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <input
-                        type="text"
-                        value={row.Title}
-                        placeholder="Add title"
-                        onChange={(e) => handleInputChange(index, "Title", e.target.value)}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-                      />
-                    </td>
-                    <td className="px-6 py-4">
-                      <select
-                        value={row.IconID}
-                        onChange={(e) => handleInputChange(index, "IconID", e.target.value)}
-                        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-                      >
-                        <option value={0}>Select an icon</option>
-                        {icons.map((icon) => (
-                          <option key={icon.IconID} value={icon.IconID}>
-                            {icon.IconName}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td className="px-6 py-4">
-                      <button
-                        onClick={() => handleDeleteClick(index)}
-                        className="text-red-600 hover:text-red-900 focus:outline-none"
-                      >
-                        <LucideDelete className="w-5 h-5" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
 
@@ -346,14 +356,14 @@ const AboutUsDetails = () => {
 
                               // If not, fall back to finding icon in icons array
                               const foundIcon = icons.find(icon => icon.IconID === detail.IconID);
-                              
+
                               console.log('Searching for icon:', {
-                                detailIconId: detail.IconID, 
-                                availableIcons: icons.map(i => ({id: i.IconID, name: i.IconName}))
+                                detailIconId: detail.IconID,
+                                availableIcons: icons.map(i => ({ id: i.IconID, name: i.IconName }))
                               });
-                              
-                              return foundIcon 
-                                ? foundIcon.IconName 
+
+                              return foundIcon
+                                ? foundIcon.IconName
                                 : `Unknown Icon (ID: ${detail.IconID})`
                             })()}
                           </span>

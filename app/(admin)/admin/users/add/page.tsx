@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import data from '../../../../../public/data/addUser.json'
 import axios from "axios";
 import { wrapFormSubmit } from "@/lib/form-utils";
+import { OK } from "zod";
 
 export default function Page() {
   const breadcrumbItems = [
@@ -24,7 +25,7 @@ export default function Page() {
         headers: { "Content-Type": "application/json" },
       });
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         alert("User added successfully!");
         redirect("/admin/users");
       } else {
