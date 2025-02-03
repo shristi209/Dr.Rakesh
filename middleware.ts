@@ -26,13 +26,13 @@ export async function middleware(request: NextRequest) {
             value: payload.role,
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 60 * 60 * 24, 
+            maxAge: 60 * 60 * 24,
             path: '/',
         });
 
         const roleRoutes: { [key: string]: string } = {
             'admin': '/admin',
-            'patient': '/patient'
+            'patient': '/patientappointment'
         };
 
         const targetRoute = roleRoutes[payload.role];

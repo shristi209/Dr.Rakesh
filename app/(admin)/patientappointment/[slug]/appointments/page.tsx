@@ -3,19 +3,13 @@ import AppointmentsReceivedByPatient from "@/components/dashboard/appointmentsRe
 import { AppointData, getAppointmentById } from "@/app/api/appointment/route";
 import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
-import { useSlug } from "@/hooks/useSlug";
 
-// interface PageProps {
-//   appointData: AppointData[];
-//   error: string | null;
-// }
 
 export default async function Page() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
   let appointData: AppointData[] = [];
-  // let error: string | null = null;
 
   if (token) {
     try {
@@ -28,11 +22,10 @@ export default async function Page() {
     }
   }
 
-  const slug = useSlug();
   const breadcrumbItems = [
     {
       label: "Appointments",
-      href: `/patientappointment/${slug}/appointments`,
+      href: `/patient`,
     },
   ];
 

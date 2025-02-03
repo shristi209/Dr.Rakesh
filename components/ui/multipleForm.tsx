@@ -44,7 +44,6 @@ export default function MultipleForm({
 
     const handleMainFormChange = useCallback((data: Record<string, string>) => {
         setFormData(prevData => {
-            // Only update if the data is actually different
             const isChanged = Object.keys(data).some(
                 key => prevData[key] !== data[key]
             );
@@ -52,11 +51,10 @@ export default function MultipleForm({
         });
     }, []);
 
-    const handleAdditionalFormChange = useCallback((index: number, data: Record<string, string>) => {
+    useCallback((index: number, data: Record<string, string>) => {
         setAdditionalFormData(prevData => {
             const updatedAdditionalForms = [...prevData];
             
-            // Only update if the data is actually different
             const isChanged = Object.keys(data).some(
                 key => updatedAdditionalForms[index][key] !== data[key]
             );

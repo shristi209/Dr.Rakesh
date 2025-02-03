@@ -8,7 +8,7 @@ LogOut,
 } from 'lucide-react';
 import Header from '@/components/dashboard/header/header';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
-import { useSlug } from '@/hooks/useSlug';
+import { jwtVerify } from "jose";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,6 +21,22 @@ export default async function AdminLayout({
 }) {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
+  
+  let userId = null;
+  if (token) {
+    try {
+      const secretKey = new TextEncoder().encode(process.env.JWT_SECRET_KEY);
+      
+      const { payload } = await jwtVerify(token, secretKey);
+      
+      userId = payload.id;
+
+      console.log("User ID from token:", userId);
+    } catch (err) {
+      console.error("Error verifying token:", err);
+    }
+  }
+
   const userRole = cookieStore.get('userRole')?.value as UserRole | undefined;
 
   if (!token || !userRole) {
@@ -33,7 +49,7 @@ export default async function AdminLayout({
       <aside className="fixed inset-y-0 left-0 bg-gray-900 w-64 z-50">
         <div className="flex flex-col h-full">
           <div className="flex items-center h-16 px-6 border-b border-gray-800">
-            <Link href={userRole === 'admin' ? '/admin' : `/patientappointment/${useSlug()}`} className="flex items-center space-x-2">
+            <Link href={userRole === 'admin' ? '/admin' : `/patientappointment/${userId}`} className="flex items-center space-x-2">
               <Home className="w-6 h-6 text-white" />
               <span className="font-bold text-xl text-white">Dr. Rakesh</span>
             </Link>
