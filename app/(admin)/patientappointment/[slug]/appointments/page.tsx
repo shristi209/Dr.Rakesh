@@ -5,17 +5,17 @@ import { cookies } from "next/headers";
 import { jwtVerify } from "jose";
 import { useSlug } from "@/hooks/useSlug";
 
-interface PageProps {
-  appointData: AppointData[];
-  error: string | null;
-}
+// interface PageProps {
+//   appointData: AppointData[];
+//   error: string | null;
+// }
 
 export default async function Page() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
   let appointData: AppointData[] = [];
-  let error: string | null = null;
+  // let error: string | null = null;
 
   if (token) {
     try {
@@ -25,7 +25,6 @@ export default async function Page() {
       appointData = await getAppointmentById(payload.email);
     } catch (err) {
       console.error("Error fetching appointments:", err);
-      error = "Failed to fetch appointments";
     }
   }
 

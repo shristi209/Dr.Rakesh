@@ -3,7 +3,7 @@ import ContactPage from "@/components/website/contact/contact-form";
 import { getContactData } from "@/app/api/apicontact";
 
 export default async function Page() {
-  const contactInformation = await getContactData(1);
+  const contactInformation = await getContactData();
 
   const breadcrumbItems = [
     {

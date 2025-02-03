@@ -26,7 +26,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, closeModal }) => {
         <p className="mt-4 text-center">
           {isLogin ? (
             <>
-              Don't have an account?{' '}
+              Don&apos;t have an account?{' '}
               <span
                 className="text-blue-500 cursor-pointer"
                 onClick={() => setIsLogin(false)}
@@ -45,6 +45,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, closeModal }) => {
               </span>
             </>
           )}
+        </p>
+
+        <p className="text-gray-600 mb-4">
+          Don&apos;t miss out on our latest updates and exclusive offers!
         </p>
 
         <button

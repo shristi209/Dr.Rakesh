@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, MouseEvent as ReactMouseEvent } from 'react';
 import { Button } from '@/components/ui/button';
-import { User } from 'lucide-react';
 import Modal from '@/components/modal/Modal';
 import ProfileButton from '../ui/profile';
 import Cookies from 'js-cookie';
@@ -22,25 +21,25 @@ const LoginRegisterButton: React.FC = () => {
 
 
     return (
-        <div>
+        <>
             {isLoggedIn ? (
                 <ProfileButton title={'Dashboard'} link={'/admin'}/>
             ) : (
                 <>
                     <Button
-                        className="hidden md:flex items-center rounded text-emerald-600 border-[1px] border-emerald-900 hover:bg-emerald-50 font-bold"
-                        onClick={(e) => {
+                        className="hidden flex items-center rounded-md text-emerald-600 border-[1px] border-emerald-900 hover:bg-emerald-50 font-bold"
+                        onClick={(e: ReactMouseEvent<HTMLButtonElement>) => {
                             e.preventDefault();
                             openModal();
                         }}
                     >
-                        <User className="h-4 w-4" />
+                        {/* <User/> */}
                         <span>Sign In</span>
                     </Button>
                     <Modal isOpen={isModalOpen} closeModal={closeModal} />
                 </>
             )}
-        </div>
+        </>
     );
 };
 

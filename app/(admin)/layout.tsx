@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import {
-  LucideHome,
-  LucideLogOut,
+  Home,
+LogOut,
 } from 'lucide-react';
 import Header from '@/components/dashboard/header/header';
 import Sidebar from '@/components/dashboard/sidebar/sidebar';
@@ -23,7 +23,6 @@ export default async function AdminLayout({
   const token = cookieStore.get('token')?.value;
   const userRole = cookieStore.get('userRole')?.value as UserRole | undefined;
 
-  // Redirect to login if no token or not an admin or patient
   if (!token || !userRole) {
     redirect('/');
   }
@@ -35,7 +34,7 @@ export default async function AdminLayout({
         <div className="flex flex-col h-full">
           <div className="flex items-center h-16 px-6 border-b border-gray-800">
             <Link href={userRole === 'admin' ? '/admin' : `/patientappointment/${useSlug()}`} className="flex items-center space-x-2">
-              <LucideHome className="w-6 h-6 text-white" />
+              <Home className="w-6 h-6 text-white" />
               <span className="font-bold text-xl text-white">Dr. Rakesh</span>
             </Link>
           </div>
@@ -46,7 +45,7 @@ export default async function AdminLayout({
                 type="submit" 
                 className="flex items-center space-x-2 text-white hover:bg-gray-700 w-full p-2 rounded-md transition-colors"
               >
-                <LucideLogOut className="w-5 h-5" />
+                <LogOut className="w-5 h-5" />
                 <span>Logout</span>
               </button>
             </form>

@@ -1,22 +1,32 @@
 "use client";
 import { useEffect, useState } from "react";
-import DynamicForm from "../ui/dynamicForm";
 import axios from "axios";
 import formElements from "../../public/data/servicesForm.json";
-import { LucideDelete, LucidePlus, LucidePencil, LucideCheck, LucideX } from "lucide-react";
-import MultipleForm from "../ui/multipleForm";
+
+import { Delete, Pencil, Check, X } from "lucide-react";
+import MultipleForm, { DynamicFormElement } from "../ui/multipleForm";
+import { DetailFormElement } from "../ui/multipleForm";
+
+const typedFormElements = formElements as DynamicFormElement[];
 
 interface ServicesDetail {
-  DetailID?: number;
+  id?: number;
+  ServiceTitle: string;
+  ServiceDescription: string;
+  ServicePicture: string;
+}
+
+interface ServicesData {
+  id: number;
+  Name: string;
   Title: string;
   Description: string;
-  Picture: string;
-  isDeleted?: boolean;
+  servicesDetails: ServicesDetail[];
 }
 
 const ServicesDetails = () => {
-  const [res, setRes] = useState<any>();
-  const [initialServicesData, setInitialServicesData] = useState<any>();
+  const [res, setRes] = useState<ServicesData | null>(null);
+  const [initialServicesData, setInitialServicesData] = useState<ServicesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [savedDetails, setSavedDetails] = useState<ServicesDetail[]>([]);
@@ -36,10 +46,10 @@ const ServicesDetails = () => {
         // Initialize saved details with existing services details
         if (response.data.servicesDetails && Array.isArray(response.data.servicesDetails)) {
           setSavedDetails(response.data.servicesDetails.map((detail: ServicesDetail) => ({
-            DetailID: detail.DetailID,
-            Title: detail.Title,
-            Description: detail.Description,
-            Picture: detail.Picture || ""
+            id: detail.id,
+            ServiceTitle: detail.ServiceTitle,
+            ServiceDescription: detail.ServiceDescription,
+            ServicePicture: detail.ServicePicture || ""
           })));
         }
         
@@ -54,10 +64,10 @@ const ServicesDetails = () => {
   }, []);
 
   const [rows, setRows] = useState<ServicesDetail[]>([
-    { Title: "", Description: "", Picture: "" }
+    { ServiceTitle: "", ServiceDescription: "", ServicePicture: "" }
   ]);
 
-  const handleInputChange = (index: number, field: keyof ServicesDetail, value: string) => {
+  const handleInputChange = (index: number, field: keyof ServicesDetail, value: string | number) => {
     if (editMode && editingIndex !== null) {
       const updatedDetails = [...savedDetails];
       updatedDetails[editingIndex] = { 
@@ -90,9 +100,9 @@ const ServicesDetails = () => {
         servicesData: res,
         servicesDetailsData: savedDetails.map(detail => ({
           ...detail,
-          Title: detail.Title.trim(),
-          Description: detail.Description.trim(),
-          Picture: detail.Picture.trim() || null
+          ServiceTitle: detail.ServiceTitle.trim(),
+          ServiceDescription: detail.ServiceDescription.trim(),
+          ServicePicture: detail.ServicePicture.trim() || null
         }))
       });
       
@@ -116,9 +126,9 @@ const ServicesDetails = () => {
           servicesData: res,
           servicesDetailsData: updatedDetails.map(detail => ({
             ...detail,
-            Title: detail.Title.trim(),
-            Description: detail.Description.trim(),
-            Picture: detail.Picture.trim() || null
+            ServiceTitle: detail.ServiceTitle.trim(),
+            ServiceDescription: detail.ServiceDescription.trim(),
+            ServicePicture: detail.ServicePicture.trim() || null
           }))
         });
         
@@ -132,22 +142,30 @@ const ServicesDetails = () => {
     }
   };
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: Record<string, string>) => {
     try {
-      // console.log("Full form data:", formData);
 
-      // Extract details from form data
       const detailKeys = Object.keys(formData).filter(key => key.includes('details'));
-      const newDetails = detailKeys.map(key => {
+      console.log("Detail keys:", detailKeys);
+
+      const newDetails: ServicesDetail[] = detailKeys.flatMap(key => {
         try {
-          return JSON.parse(formData[key]);
+          const parsedDetails: ServicesDetail[] = JSON.parse(formData[key]);
+          
+          return parsedDetails.map(detail => ({
+            ServiceTitle: detail.ServiceTitle || '',
+            ServiceDescription: detail.ServiceDescription || '',
+            ServicePicture: detail.ServicePicture || ''
+          })).filter((detail: ServicesDetail) => 
+            detail.ServiceTitle.trim() !== '' && detail.ServiceDescription.trim() !== ''
+          );
         } catch (error) {
           console.error(`Error parsing details for key ${key}:`, error);
           return [];
         }
-      }).flat().filter((detail: any) => detail.Title && detail.Description && detail.Picture);
+      });
 
-      console.log("Parsed new details:", newDetails);
+      console.log("Filtered new details:", newDetails);
 
       const hasChanges =
         formData.Name !== initialServicesData?.Name ||
@@ -169,11 +187,11 @@ const ServicesDetails = () => {
         console.log("Submit response:", response.data);
         
         setSavedDetails(prev => [...prev, ...newDetails]);
-        setRows([{ Title: "", Description: "", Picture: "" }]);
+        setRows([{ ServiceTitle: "", ServiceDescription: "", ServicePicture: "" }]);
         
         alert("Data updated successfully!");
       } else {
-        alert("No changes detected.");
+        console.log("No changes detected.");
       }
     } catch (error) {
       console.error("Error submitting data", error);
@@ -181,26 +199,36 @@ const ServicesDetails = () => {
     }
   };
 
-  const additionalFormElements =[
+  const additionalFormElements = [
     {
-      name: "Title",
+      name: "ServiceTitle",
       type: "text",
       label: "Title",
-      placeholder: "Enter the title"
+      placeholder: "Enter the title",
+      required: true
     },
     {
-      name: "Description",
+      name: "ServiceDescription",
       type: "textarea",
       label: "Description",
-      placeholder: "Enter the description"
+      placeholder: "Enter the description",
+      required: true
     },
     {
-      name: "Picture",
+      name: "ServicePicture",
       type: "file",
       label: "Picture",
-      placeholder: "Choose a file"
+      placeholder: "Choose a file",
+      required: true
     }
-  ]
+  ] as DetailFormElement[];
+
+  const initialFormValues: Record<string, string> = res ? {
+    Name: res.Name || '',
+    Title: res.Title || '',
+    Description: res.Description || ''
+  } : {};
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -225,9 +253,9 @@ const ServicesDetails = () => {
         </div>
         <div>
           <MultipleForm
-            elements={formElements}
+            elements={typedFormElements}
             onSubmitAction={handleSubmit}
-            initialValues={res}
+            initialValues={initialFormValues}
             additionalForms={[
               {
                 title: "Additional Details",
@@ -262,35 +290,35 @@ const ServicesDetails = () => {
                         {editMode && editingIndex === index ? (
                           <input
                             type="text"
-                            value={detail.Title}
-                            onChange={(e) => handleInputChange(index, "Title", e.target.value)}
+                            value={detail.ServiceTitle}
+                            onChange={(e) => handleInputChange(index, "ServiceTitle", e.target.value)}
                             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
                           />
                         ) : (
-                          <span className="text-sm text-gray-900">{detail.Title}</span>
+                          <span className="text-sm text-gray-900">{detail.ServiceTitle}</span>
                         )}
                       </td>
                       <td className="px-6 py-4">
                         {editMode && editingIndex === index ? (
                           <textarea
-                            value={detail.Description}
-                            onChange={(e) => handleInputChange(index, "Description", e.target.value)}
+                            value={detail.ServiceDescription}
+                            onChange={(e) => handleInputChange(index, "ServiceDescription", e.target.value)}
                             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
                           />
                         ) : (
-                          <span className="text-sm text-gray-900">{detail.Description}</span>
+                          <span className="text-sm text-gray-900">{detail.ServiceDescription}</span>
                         )}
                       </td>
                       <td className="px-6 py-4">
                         {editMode && editingIndex === index ? (
                           <input
                             type="text"
-                            value={detail.Picture}
-                            onChange={(e) => handleInputChange(index, "Picture", e.target.value)}
+                            value={detail.ServicePicture}
+                            onChange={(e) => handleInputChange(index, "ServicePicture", e.target.value)}
                             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
                           />
                         ) : (
-                          <span className="text-sm text-gray-900">{detail.Picture}</span>
+                          <span className="text-sm text-gray-900">{detail.ServicePicture}</span>
                         )}
                       </td>
                       <td className="px-6 py-4">
@@ -301,13 +329,13 @@ const ServicesDetails = () => {
                                 onClick={handleSaveEdit}
                                 className="text-green-600 hover:text-green-900 focus:outline-none"
                               >
-                                <LucideCheck className="w-5 h-5" />
+                                <Check className="w-5 h-5" />
                               </button>
                               <button
                                 onClick={handleCancelEdit}
                                 className="text-gray-600 hover:text-gray-900 focus:outline-none"
                               >
-                                <LucideX className="w-5 h-5" />
+                                <X className="w-5 h-5" />
                               </button>
                             </>
                           ) : (
@@ -316,13 +344,13 @@ const ServicesDetails = () => {
                                 onClick={() => handleEditClick(index)}
                                 className="text-blue-600 hover:text-blue-900 focus:outline-none"
                               >
-                                <LucidePencil className="w-5 h-5" />
+                                <Pencil className="w-5 h-5" />
                               </button>
                               <button
                                 onClick={() => handleDeleteSavedDetail(index)}
                                 className="text-red-600 hover:text-red-900 focus:outline-none"
                               >
-                                <LucideDelete className="w-5 h-5" />
+                                <Delete className="w-5 h-5" />
                               </button>
                             </>
                           )}

@@ -20,16 +20,16 @@ interface AppointDataProps {
 }
 
 const AppointmentReceived = ({ appointmentData }: AppointDataProps) => {
-  const [selectedStatus, setSelectedStatus] = useState<AppointmentStatusType | null>(null);
+  // const [selectedStatus, setSelectedStatus] = useState<AppointmentStatusType | null>(null);
   const [selectedAppointment, setSelectedAppointment] = useState<number | null>(null);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
   const [newTime, setNewTime] = useState<string>('');
   const [newDate, setNewDate] = useState<string>('');
-  const [statusMap, setStatusMap] = useState<{ [key: number]: boolean }>({});
+  // const [statusMap, setStatusMap] = useState<{ [key: number]: boolean }>({});
 
   const handleStatusChange = async (appointmentId: number, status: AppointmentStatusType) => {
     setSelectedAppointment(appointmentId);
-    setSelectedStatus(status);
+    // setSelectedStatus(status);
 
     if (status === 'Rescheduled') {
       setShowRescheduleModal(true);
@@ -41,7 +41,7 @@ const AppointmentReceived = ({ appointmentData }: AppointDataProps) => {
         });
         if (response.status === 200) {
           alert(`Appointment status updated to ${status}.`);
-          setStatusMap((prev) => ({ ...prev, [appointmentId]: true }));
+          // setStatusMap((prev) => ({ ...prev, [appointmentId]: true }));
         }
 
       } catch (error) {
@@ -92,7 +92,7 @@ const AppointmentReceived = ({ appointmentData }: AppointDataProps) => {
       <div className="p-6">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead>
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Full Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>

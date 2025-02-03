@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
 import { usePathname } from "next/navigation";
-import AdminButton from "../dashboard/button";
 
 export interface BreadcrumbProps {
   items: {

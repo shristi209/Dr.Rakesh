@@ -1,5 +1,5 @@
 
-import { Phone, Mail, Clock ,Facebook, Twitter, Instagram} from "lucide-react";
+import { Phone, Mail ,Facebook, Twitter, Instagram} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { ContactInformation } from "@/app/api/apicontact";
@@ -33,7 +33,7 @@ export default function TopHeader({ contactInformation }: TopHeaderProps) {
             </Link>
           </div>
         </div>
-        <div className="items-center gap-4 hidden md:flex ">
+        <div className="items-center gap-4 hidden sm:flex ">
           <Link
             href={contactInformation?.facebook || "#"}
             target="_blank"

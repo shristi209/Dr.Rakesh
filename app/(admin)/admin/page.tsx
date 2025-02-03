@@ -1,11 +1,8 @@
 import { getDbPool } from "@/admin/utils/db";
-import Editor from "@/components/ui/Editor";
 import {
-  LucideUsers,
-  LucideBarChart,
-  LucideDollarSign,
-  LucideActivity,
-  LucideHeartPulse,
+  Users,
+  Activity,
+  HeartPulse,
 } from 'lucide-react';
 
 async function fetchDashboardStats() {
@@ -44,24 +41,24 @@ export default async function AdminDashboard() {
     {
       name: 'Total Patients',
       value: patientCount,
-      icon: LucideUsers,
+      icon: Users,
     },
     {
       name: 'Total Services',
       value: servicesCount,
-      icon: LucideHeartPulse,
+      icon: HeartPulse,
     }
   ];
 
   const activities = [
     {
-      icon: LucideUsers,
+      icon: Users,
       title: 'New user registered',
       description: 'John Doe created a new account',
       time: '5 min ago',
     },
     {
-      icon: LucideActivity,
+      icon: Activity,
       title: 'New Appointment',
       description: 'New Appointment Booked',
       time: '1 hour ago',
@@ -89,7 +86,7 @@ export default async function AdminDashboard() {
           </div>
         ))}
       </div>
-<Editor/>
+
       {/* Recent Activity */}
       <div className="bg-white rounded-lg shadow-sm border">
         <div className="p-6 border-b">

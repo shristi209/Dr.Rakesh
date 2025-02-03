@@ -36,11 +36,23 @@ const ContactForm = () => {
     return <div>Loading...</div>;
   }
 
-  return <DynamicForm 
-    elements={form} 
-    onSubmitAction={wrapFormSubmit(handleFormSubmit)} 
-    initialValues={contact || {}} 
-  />;
+  return (
+    <div className="mt-5 mx-auto space-y-8">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
+          <h2 className="text-lg font-semibold text-gray-800">Contact Information</h2>
+        </div>
+        <div className="p-6">
+          <DynamicForm
+            elements={form}
+            onSubmitAction={wrapFormSubmit(handleFormSubmit)}
+            initialValues={contact || {}}
+          />
+        </div>
+      </div>
+    </div>
+
+  )
 };
 
 export default ContactForm;

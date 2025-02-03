@@ -1,11 +1,10 @@
 import { getDbPool } from "@/admin/utils/db";
-import { NextRequest, NextResponse } from "next/server";
 
 export interface ServiceDetailData {
   DetailID: number;
-  Title: string;
-  Description: string;
-  Picture: string;
+  ServiceTitle: string;
+  ServiceDescription: string;
+  ServicePicture: string;
   services_id: number;
 }
 export interface ServiceData {
@@ -21,7 +20,7 @@ export interface ServiceShortData {
 }
 
 
-export async function getServices(): Promise<ServiceData | null> {
+export async function getServices(): Promise<ServiceData> {
   try {
     const pool = await getDbPool();
     const query = `
@@ -37,7 +36,7 @@ export async function getServices(): Promise<ServiceData | null> {
     }
 
     const detailQuery = `
-      SELECT Title, Description, Picture, services_id 
+      SELECT ServiceTitle, ServiceDescription, ServicePicture, services_id 
       FROM ServicesDetail 
       WHERE services_id = @id
     `;
@@ -50,7 +49,7 @@ export async function getServices(): Promise<ServiceData | null> {
       ...service,
       details: detailData.recordset.map((detail: ServiceDetailData) => ({
         ...detail,
-        Picture: detail.Picture ? `/${detail.Picture}` : ''
+        ServicePicture: detail.ServicePicture ? `/images/${detail.ServicePicture}` : ''
       }))
     };
   } catch (error) {
@@ -58,23 +57,3 @@ export async function getServices(): Promise<ServiceData | null> {
     throw error;
   }
 }
-
-// export async function getServicesName(): Promise<ServiceShortData[]> {
-//   try {
-//     const pool = await getDbPool();
-
-//     const detailQuery = `
-//       SELECT Title
-//       FROM ServicesDetail
-//     `;
-//     console.log('Executing detail query:', detailQuery);
-//     const detailData = await pool.request().query(detailQuery);
-
-//     return detailData.recordset.map((detail: { Title: string }) => ({
-//       Title: detail.Title,
-//     }));
-//   } catch (error) {
-//     console.error('Error fetching services:', error);
-//     throw error;
-//   }
-// }

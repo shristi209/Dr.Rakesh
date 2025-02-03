@@ -1,7 +1,5 @@
 "use client"
 import ProfileButton from "@/components/ui/profile";
-import Cookies from 'js-cookie';
-import { redirect } from "next/dist/server/api-utils";
 
 export default function Header() {
 

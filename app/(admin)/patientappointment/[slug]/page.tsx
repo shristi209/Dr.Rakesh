@@ -1,17 +1,12 @@
 import { AppointData, getAppointmentById } from '@/app/api/appointment/route';
 import { jwtVerify } from 'jose';
-import {
-  LucideTimer,
-  LucideUsers,
-  LucideDollarSign,
-  LucideHeartPulse,
-} from 'lucide-react';
+import { Timer, Users, DollarSign, Activity } from 'lucide-react'
 import { cookies } from 'next/headers';
 
-interface PageProps {
-  appointData: AppointData[];
-  error: string | null;
-}
+// interface PageProps {
+//   appointData: AppointData[];
+//   error: string | null;
+// }
 
 export default async function PatientPage() {
   const cookieStore = await cookies();
@@ -36,29 +31,29 @@ export default async function PatientPage() {
     {
       name: 'Total Appointments',
       value: appointData.length.toString(),
-      icon: LucideUsers,
+      icon: Activity,
     },
     {
       name: 'Appointment Date',
       value: latestAppointment?.date ? String(latestAppointment.date) : 'No upcoming appointments',
-      icon: LucideTimer,
+      icon: Timer,
     },
     {
       name: 'Appointment Time',
       value: latestAppointment?.time ? String(latestAppointment.time) : 'No upcoming appointments',
-      icon: LucideHeartPulse,
+      icon: Timer,
     }
   ];
 
   const activities = [
     {
-      icon: LucideUsers,
+      icon: Users,
       title: 'New user registered',
       description: 'John Doe created a new account',
       time: '5 min ago',
     },
     {
-      icon: LucideDollarSign,
+      icon: DollarSign,
       title: 'New subscription',
       description: 'Pro plan subscription purchased',
       time: '1 hour ago',

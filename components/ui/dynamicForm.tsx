@@ -1,37 +1,24 @@
 "use client";
 
 import React, { useState } from "react";
-
-interface FormElement {
-    name: string;
-    label: string;
-    type: string;
-    placeholder?: string;
-    options?: string[];
-    required?: boolean;
-}
+import { DynamicFormElement } from "./multipleForm";
 
 interface DynamicFormProps {
-    elements: FormElement[];
-    formData?: Record<string, string>;
-    initialValues?: Record<string, string>;
-    onChange?: (data: Record<string, string>) => void;
+    elements: DynamicFormElement[];
+    formData: Record<string, string>;
+    onChange: (data: Record<string, string>) => void;
     onSubmitAction?: (data: Record<string, string>) => void;
     className?: string;
 }
 
 export default function DynamicForm({
     elements,
-    formData = {},
-    initialValues = {},
+    formData,
     onChange,
     onSubmitAction,
     className = ""
 }: DynamicFormProps) {
-    const [localFormData, setLocalFormData] = useState<Record<string, string>>({
-        ...initialValues,
-        ...formData
-    });
+    const [localFormData, setLocalFormData] = useState<Record<string, string>>(formData);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type, files } = event.target as HTMLInputElement;
@@ -44,7 +31,7 @@ export default function DynamicForm({
         }
 
         setLocalFormData(updatedFormData);
-        onChange?.({ ...updatedFormData });
+        onChange({ ...updatedFormData });
     };
 
     const handleSubmit = (event: React.FormEvent) => {
@@ -115,6 +102,17 @@ export default function DynamicForm({
                     );
                 })}
             </div>
+            {onSubmitAction && (
+                <div className="flex justify-center my-6">
+                    <button
+                        type="submit"
+                        className="w-64 inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        onClick={handleSubmit}
+                    >
+                        Submit
+                    </button>
+                </div>
+            )}
         </form>
     );
 }

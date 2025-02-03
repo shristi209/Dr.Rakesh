@@ -1,13 +1,26 @@
 import Image from "next/image";
-import hero from "../../public/assests/rakeshYadav.png";
 import { AppointmentButton, ExploreServices } from "./AppointmentButton";
-import { siteSetting } from "@/app/api/apihome";
+
+interface MainData {
+  name: string;
+  specialist: string;
+  description: string;
+  image: string;
+}
 
 interface MainProps {
-  data?: any;
+  data?: MainData;
 }
 
 export default function Main({ data }: MainProps) {
+  // Provide a default object to prevent undefined errors
+  const safeData = data || {
+    name: 'Dr. Name',
+    specialist: 'Specialist',
+    description: 'Description not available',
+    image: '/default-image.png'
+  };
+
   return (
     <>
       {/* Hero Section */}
@@ -17,13 +30,13 @@ export default function Main({ data }: MainProps) {
           <div className="grid items-center gap-8 lg:grid-cols-2">
             <div className=" space-y-2 md:space-y-4">
               <h1 className="text-2xl font-bold   text-gray-900 md:text-4xl  text-nowrap ">
-                {data.name}
+                {safeData.name}
               </h1>
               <p className="text-xl font-semibold text-emerald-600">
-              {data.specialist}
+              {safeData.specialist}
               </p>
               <p className="max-w-[600px] text-gray-600 md:text-base text-sm text-justify md:text-nowrap pb-4 ">
-              {data.description}
+              {safeData.description}
               </p>
               <div className="flex flex-wrap md:gap-8 ">
                 <div className="hidden text-white md:block">
@@ -52,7 +65,7 @@ export default function Main({ data }: MainProps) {
             </div>
             <div className="relative">
               <Image
-                src={data.image}
+                src={safeData.image}
                 alt="Medical Professional"
                 width={500}
                 height={500}
@@ -61,18 +74,18 @@ export default function Main({ data }: MainProps) {
               />
               <div className="absolute bottom-4 left-4 flex items-center gap-3 rounded-full bg-white p-3 shadow-lg">
                 <Image
-                  src={data.image}
-                  alt="Dr. Jamie Smith"
+                  src={safeData.image}
+                  alt={`${safeData.name}`}
                   width={48}
                   height={48}
                   className="rounded-full"
                 />
                 <div>
                   <p className="text-sm font-semibold text-gray-800">
-                    {data.name}
+                    {safeData.name}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {data.specialist}
+                    {safeData.specialist}
                   </p>
                 </div>
               </div>

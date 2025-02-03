@@ -9,13 +9,13 @@ const Appointments = () => {
     const [token, setToken] = useState<string | null>(null);
     const [showLoginMessage, setShowLoginMessage] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
-    const { user, error: authError } = useAuth();
+    const { user } = useAuth();
 
     useEffect(() => {
         const getCookieValue = (name: string) => {
             const cookieString = document.cookie;
             const cookies = cookieString.split('; ');
-            for (let cookie of cookies) {
+            for (const cookie of cookies) {
                 const [cookieName, cookieValue] = cookie.split('=');
                 if (cookieName === name) {
                     return decodeURIComponent(cookieValue);

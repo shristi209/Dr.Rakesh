@@ -57,12 +57,9 @@ const SignUpForm: React.FC<{ switchToLogin: () => void }> = ({ switchToLogin }) 
       if (response.status === 200) {
         switchToLogin();
       }
-    } catch (err: any) {
-      if (err.response && err.response.status === 400) {
-        setGeneralError(err.response.data.message || 'This email is already signed up.');
-      } else {
-        setGeneralError('An unexpected error occurred. Please try again.');
-      }
+    } catch (error) {
+      const typedError = error as Error;
+      setGeneralError(typedError.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -103,7 +100,7 @@ const SignUpForm: React.FC<{ switchToLogin: () => void }> = ({ switchToLogin }) 
               type={type}
               name={name}
               placeholder={placeholder}
-              value={(formData as any)[name] || ''}
+              value={(formData as Record<string, string>)[name] || ''}
               onChange={handleChange}
               className={`border p-2 rounded w-full ${
                 errors[name] ? 'border-red-500' : 'border-gray-300'

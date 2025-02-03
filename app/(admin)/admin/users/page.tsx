@@ -1,15 +1,9 @@
 import AdminButton from "@/components/dashboard/button";
 import DeleteButton from "@/components/ui/deleteButton";
-import {Breadcrumb} from "@/components/website/Breadcrumb";
+import { Breadcrumb } from "@/components/website/Breadcrumb";
 import axios from "axios";
 import {
-  LucideUsers,
-  LucideBarChart,
-  LucideDollarSign,
-  LucideActivity,
-  LucidePlus,
-  LucidePencil,
-  LucideTrash2
+  Pencil,
 } from 'lucide-react';
 
 interface User {
@@ -38,18 +32,21 @@ const UsersPage = async () => {
     return (
       <>
         <Breadcrumb items={breadcrumbItems} />
-        
+
         <div className="flex justify-end mb-4 mr-4">
-          <AdminButton 
+          <AdminButton
             link="/admin/users/add"
             Name="Add"
             className="mt-3 bg-gray-900 hover:bg-gray-700"
           />
         </div>
-        
-        <div className="container mx-auto px-4">
+
+        <div className="mt-5 mx-auto space-y-8">
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="overflow-x-auto">
+            <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
+              <h2 className="text-lg font-semibold text-gray-800">Users</h2>
+            </div>
+            <div className="px-4 py-2">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -73,12 +70,12 @@ const UsersPage = async () => {
                       </td>
                       <td className="px-4 py-2 whitespace-nowrap text-sm font-medium">
                         <div className="flex gap-2">
-                          <AdminButton 
+                          <AdminButton
                             link={`/admin/users/edit/${user.id}`}
-                            icon={<LucidePencil className="w-4 h-4 text-white" />}
+                            icon={<Pencil className="w-4 h-4 text-white" />}
                             title="Edit User"
                           />
-                          <DeleteButton 
+                          <DeleteButton
                             userId={user.id}
                           />
                         </div>

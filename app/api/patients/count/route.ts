@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getDbPool } from "@/admin/utils/db";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         const pool = await getDbPool();
         const result = await pool.request().query('SELECT COUNT(*) as count FROM Patients');

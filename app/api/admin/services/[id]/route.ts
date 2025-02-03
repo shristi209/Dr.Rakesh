@@ -81,20 +81,20 @@ export async function PUT(req: NextRequest) {
           .query('DELETE FROM ServicesDetail WHERE services_id = @services_id');
 
         for (const detail of servicesDetailsData) {
-          if (!detail.Title || !detail.Description) {
+          if (!detail.ServiceTitle || !detail.ServiceDescription) {
             console.warn(`Skipping invalid service detail: ${JSON.stringify(detail)}`);
             continue;
           }
 
           try {
-            const insertResult = await transaction.request()
+            await transaction.request()
               .input('services_id', id)
-              .input('Title', detail.Title)
-              .input('Description', detail.Description)
-              .input('Picture', detail.Picture || null)
+              .input('ServiceTitle', detail.ServiceTitle)
+              .input('ServiceDescription', detail.ServiceDescription)
+              .input('ServicePicture', detail.ServicePicture || null)
               .query(`
-                INSERT INTO ServicesDetail (services_id, Picture, Title, Description)
-                VALUES (@services_id, @Picture, @Title, @Description)
+                INSERT INTO ServicesDetail (services_id, ServiceTitle, ServiceDescription, ServicePicture)
+                VALUES (@services_id, @ServiceTitle, @ServiceDescription, @ServicePicture)
               `);
 
             console.log(`Successfully inserted service detail: ${detail.Title}`);

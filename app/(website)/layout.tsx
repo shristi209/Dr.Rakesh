@@ -1,4 +1,3 @@
-import localFont from "next/font/local";
 import TopHeader from "@/components/website/header/TopHeader";
 import Footer from "@/components/website/footer/foooter";
 import BackToTop from "@/components/website/Back-to-top";
@@ -8,14 +7,13 @@ import LoginRegisterButton from "@/components/modal/LoginRegistrationButton";
 import { Phone } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { getContactData } from "@/app/api/apicontact";
-import { ContactInformation } from "@/app/api/apicontact";
 
 export default async function WebsiteLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const contactInformation = await getContactData(1) || {
+  const contactInformation = await getContactData() || {
     location: '',
     email: '',
     phone: '',
@@ -55,7 +53,7 @@ export default async function WebsiteLayout({
           <div className="md:px-4 border-b bg-white py-2 md:py-4">
             <div className="flex justify-between max-w-7xl mx-auto px-4 ">
               <div className="flex justify-center items-center">
-                <nav>
+                <nav className="hidden sm:block">
                   <ul className="flex items-center gap-6">
                     <li>
                       <NavLink href="/">Home</NavLink>
@@ -85,7 +83,7 @@ export default async function WebsiteLayout({
                     </a>
                   </Button>
                 )}
-                <div className=" md:flex">
+                <div className="hidden md:flex">
                   <LoginRegisterButton></LoginRegisterButton>
                 </div>
                 <MobileNav />

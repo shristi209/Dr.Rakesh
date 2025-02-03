@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState
+  
+ } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
@@ -52,8 +54,9 @@ const LoginForm: React.FC = () => {
           router.push('/');
           window.location.reload();
       }
-    } catch (error: any) {
-      setGeneralError(error.response?.data?.message || 'Error during login');
+    } catch (error) {
+      const typedError = error as Error;
+      setGeneralError(typedError.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -82,7 +85,7 @@ const LoginForm: React.FC = () => {
               type={type}
               name={name}
               placeholder={placeholder}
-              value={(formData as any)[name] || ''}
+              value={(formData as Record<string, string>)[name] || ''}
               onChange={handleChange}
               className={`border p-2 rounded w-full ${
                 errors[name] ? 'border-red-500' : 'border-gray-300'

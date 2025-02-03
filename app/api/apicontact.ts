@@ -11,7 +11,7 @@ export interface ContactInformation {
   twitter: string;
 }
 
-export async function getContactData(contactId: number): Promise<ContactInformation | null> {
+export async function getContactData(): Promise<ContactInformation | null> {
   try {
     const pool = await getDbPool();
     const query = `

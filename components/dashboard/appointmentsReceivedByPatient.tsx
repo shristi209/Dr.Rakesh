@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { AppointData } from "@/app/api/appointment/route";
 
 interface AppointDataProps {

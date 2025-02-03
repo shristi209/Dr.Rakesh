@@ -79,12 +79,19 @@ const SettingsDetails: React.FC<SettingsDetailsProps> = ({ initialSettings }) =>
     };
 
     return (
-        <div>
-            <DynamicForm
-                elements={formConfig.fields}
-                initialValues={settings}
-                onSubmitAction={handleFormSubmit}
-            />
+        <div className="mt-5 mx-auto space-y-8">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
+                    <h2 className="text-lg font-semibold text-gray-800">Settings Information</h2>
+                </div>
+                <div className='p-6'>
+                    <DynamicForm
+                        elements={formConfig.fields}
+                        initialValues={settings}
+                        onSubmitAction={handleFormSubmit}
+                    />
+                </div>
+            </div>
         </div>
     );
 };

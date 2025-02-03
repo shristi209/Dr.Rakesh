@@ -41,19 +41,19 @@ export function ServicesSection({ serviceData }: ServicesSectionProps) {
           </div>
         </div>
 
-        <div key={serviceData.details && serviceData.details.length > 0 ? "services-grid" : "no-services"}>
+        <div>
           {!serviceData.details || serviceData.details.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-gray-600">No service details available at the moment.</p>
             </div>
           ) : (
-            <div key="services-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {serviceData.details.map((detail) => (
                 <ServiceCard
                   key={detail.DetailID}
-                  title={detail.Title}
-                  description={detail.Description}
-                  image={detail.Picture}
+                  title={detail.ServiceTitle}
+                  description={detail.ServiceDescription}
+                  image={detail.ServicePicture}
                 />
               ))}
             </div>

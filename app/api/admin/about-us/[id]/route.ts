@@ -79,23 +79,51 @@ export async function PUT(req: NextRequest) {
       // Handle AboutUsDetails - Delete and reinsert pattern like Services
       if (Array.isArray(aboutUsDetailsData)) {
         // First, delete existing details
-        await transaction.request()
-          .input('aboutus_id', id)
-          .query('DELETE FROM AboutUsDetails WHERE aboutus_id = @aboutus_id');
+        // await transaction.request()
+        //   .input('aboutus_id', id)
+        //   .query('DELETE FROM AboutUsDetails WHERE aboutus_id = @aboutus_id');
 
         // Then insert new details
         for (const detail of aboutUsDetailsData) {
-          console.log("Inserting detail:", detail.IconID);
+          console.log("Processing detail:", detail.id);
 
           if (!detail.Title || !detail.IconID) continue;
-          await transaction.request()
-            .input('aboutus_id', id)
-            .input('title', detail.Title)
-            .input('icon_id', detail.IconID)
+
+          // Check if the detail already exists
+          const existingDetailQuery = await transaction.request()
+            .input('id', detail.id || null)
             .query(`
-              INSERT INTO AboutUsDetails (aboutus_id, title, icon_id)
-              VALUES (@aboutus_id, @title, @icon_id)
+              SELECT id FROM AboutUsDetails 
+              WHERE id = @id
             `);
+
+          if (existingDetailQuery.recordset.length > 0) {
+            console.log("Detail exists:", detail.IconID);
+            console.log("Updating detail:", detail.Title);
+            // Update existing detail
+            await transaction.request()
+              .input('id', detail.id)
+              .input('aboutus_id', id)
+              .input('title', detail.Title)
+              .input('icon_id', detail.IconID)
+              .query(`
+                UPDATE AboutUsDetails 
+                SET 
+                    title = @title, 
+                    icon_id = @icon_id
+                WHERE id = @id
+              `);
+          } else {
+            // Insert new detail
+            await transaction.request()
+              .input('aboutus_id', id)
+              .input('title', detail.Title)
+              .input('icon_id', detail.IconID)
+              .query(`
+                INSERT INTO AboutUsDetails (aboutus_id, title, icon_id)
+                VALUES (@aboutus_id, @title, @icon_id)
+              `);
+          }
         }
       }
 
@@ -113,5 +141,23 @@ export async function PUT(req: NextRequest) {
       error: 'Failed to update AboutUs and AboutUs Details',
       details: (error as Error).message
     }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const id = req.nextUrl.pathname.split('/').pop() || '';
+    if (!id) {
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+    }
+
+    const pool = await getDbPool();
+    await pool.request()
+      .input('id', id)
+      .query('DELETE FROM AboutUsDetails WHERE id = @id');
+    return NextResponse.json({ message: 'AboutUs deleted successfully!' });
+  } catch (error) {
+    const typedError = error as Error;
+    return NextResponse.json({ error: 'Error deleting AboutUs', details: typedError.message }, { status: 500 });
   }
 }

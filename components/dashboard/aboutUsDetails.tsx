@@ -1,10 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import DynamicForm from "../ui/dynamicForm";
 import axios from "axios";
-import formElements from "../../public/data/aboutusForm.json";
-import { LucideDelete, LucidePlus, LucidePencil, LucideCheck, LucideX } from "lucide-react";
+import formElements from "../../public/data/aboutusForm.json" assert { type: "json" };
+import { DynamicFormElement, DetailFormElement } from "../ui/multipleForm";
+import { Delete, Pencil, Check, X } from "lucide-react";
 import MultipleForm from "../ui/multipleForm";
+// import toast from 'react-hot-toast';
+
+const typedFormElements = formElements as DynamicFormElement[];
 
 interface Icon {
   IconID: number;
@@ -12,16 +15,68 @@ interface Icon {
 }
 
 interface AboutUsDetail {
-  DetailID?: number;
+  id?: number;
   Title: string;
   IconID: number;
-  IconName?: string;
+  IconName: string;
   isDeleted?: boolean;
 }
 
+interface AboutUsData {
+  name: string;
+  title: string;
+  description: string;
+  picture?: string | null;
+  details?: AboutUsDetail[];
+}
+
+interface FormDetail {
+  title?: string;
+  Title?: string;
+  icon_id?: number | string;
+}
+
+interface FormData {
+  name?: string;
+  title?: string;
+  description?: string;
+  picture?: string | null;
+  [key: string]: string | undefined | null; 
+}
+
+interface ApiResponseDetail {
+  id?: number;
+  title: string;
+  icon_id: number;
+  IconName?: string;
+}
+
+function isValidApiResponseDetail(detail: Partial<ApiResponseDetail>): detail is ApiResponseDetail {
+  return (
+    typeof detail.title === 'string' && 
+    detail.title.trim() !== '' && 
+    typeof detail.icon_id === 'number' && 
+    detail.icon_id > 0
+  );
+}
+
+interface RawIconData {
+  IconID?: unknown;
+  IconName?: unknown;
+}
+
+function isValidIcon(icon: RawIconData): icon is Icon {
+  return (
+    typeof icon.IconID === 'number' && 
+    icon.IconID > 0 && 
+    typeof icon.IconName === 'string' && 
+    icon.IconName.trim() !== ''
+  );
+}
+
 const AboutUsDetails = () => {
-  const [res, setRes] = useState<any>();
-  const [initialAboutUsData, setInitialAboutUsData] = useState<any>();
+  const [res, setRes] = useState<AboutUsData | null>(null);
+  const [initialAboutUsData, setInitialAboutUsData] = useState<AboutUsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [savedDetails, setSavedDetails] = useState<AboutUsDetail[]>([]);
@@ -29,11 +84,11 @@ const AboutUsDetails = () => {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [icons, setIcons] = useState<Icon[]>([]);
   const [rows, setRows] = useState<AboutUsDetail[]>([
-    { Title: "", IconID: 0 }
+    { Title: "", IconID: 0, IconName: "" }
   ]);
 
   useEffect(() => {
-    const fetchAboutUsData = async () => {
+    const fetchData = async () => {
       try {
         const aboutUsId = 1;
         const response = await axios.get(`/api/admin/about-us/${aboutUsId}`);
@@ -42,48 +97,86 @@ const AboutUsDetails = () => {
         setRes(response.data);
         setInitialAboutUsData(response.data);
 
+        // Robust validation and mapping of details
         if (response.data.aboutUsDetails && Array.isArray(response.data.aboutUsDetails)) {
-          setSavedDetails(response.data.aboutUsDetails.map((detail: any) => ({
-            DetailID: detail.DetailID,
-            Title: detail.title,
-            IconID: detail.icon_id,
-            IconName: detail.IconName
-          })));
+          const validDetails: AboutUsDetail[] = response.data.aboutUsDetails
+            .filter(isValidApiResponseDetail)
+            .map((detail : ApiResponseDetail) : AboutUsDetail => {
+              const foundIcon = icons.find(icon => 
+                icon.IconID === detail.icon_id || 
+                icon.IconName === String(detail.icon_id)
+              );
+
+              return {
+                id: detail.id,
+                Title: detail.title,
+                IconID: detail.icon_id,
+                IconName: foundIcon?.IconName || detail.IconName || 'Unknown Icon'
+              };
+            });
+
+          // Only set details if there are valid entries
+          if (validDetails.length > 0) {
+            setSavedDetails(validDetails);
+          } else {
+            console.warn('No valid details found in the response');
+          }
         }
 
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching About Us data", error);
-        setError("Failed to load About Us data");
+        // Comprehensive error handling
+        const errorMessage = error instanceof Error 
+          ? error.message 
+          : 'An unknown error occurred while fetching data';
+        
+        console.error("Error fetching About Us data:", errorMessage);
+        setError(`Failed to load About Us data: ${errorMessage}`);
         setLoading(false);
       }
     };
-    fetchAboutUsData();
-  }, []);
+
+    fetchData();
+  }, [icons, setRes, setInitialAboutUsData, setSavedDetails]);
 
   useEffect(() => {
     const fetchIcons = async () => {
       try {
-        const response = await axios.get("/api/admin/icons");
+        const response = await axios.get<RawIconData[]>("/api/admin/icons");
         console.log("Fetched Icons:", response.data);
 
-        // Ensure icons are valid
-        const validIcons = response.data.filter((icon: Icon) =>
-          icon.IconID && icon.IconName
-        );
+        // Validate and transform icons
+        const validIcons: Icon[] = response.data
+          .filter(isValidIcon)
+          .map(icon => ({
+            IconID: icon.IconID as number,
+            IconName: icon.IconName as string
+          }));
 
-        setIcons(validIcons);
-
-        if (validIcons.length === 0) {
+        // Only update if there are valid icons
+        if (validIcons.length > 0) {
+          setIcons(validIcons);
+        } else {
           console.warn("No valid icons found");
+          setIcons([]); // Ensure icons is an empty array if no valid icons
         }
       } catch (error) {
-        console.error("Error fetching Icons", error);
-        setError("Failed to load icons");
+        // Comprehensive error handling
+        const errorMessage = error instanceof Error 
+          ? error.message 
+          : 'An unknown error occurred while fetching icons';
+        
+        console.error("Error fetching Icons:", errorMessage);
+        setError(`Failed to load icons: ${errorMessage}`);
+        setIcons([]); // Ensure icons is an empty array on error
       }
     };
-    fetchIcons();
-  }, []);
+
+    // Only fetch if icons is empty
+    if (icons.length === 0) {
+      fetchIcons();
+    }
+  }, [icons, setIcons, setError]);
 
   const handleInputChange = (index: number, field: keyof AboutUsDetail, value: string | number) => {
     if (editMode && editingIndex !== null) {
@@ -122,7 +215,7 @@ const AboutUsDetails = () => {
       });
 
       console.log("Edit saved:", response.data);
-      setEditMode(false);
+      setEditMode(false); 
       setEditingIndex(null);
       alert("Changes saved successfully!");
     } catch (error) {
@@ -131,62 +224,58 @@ const AboutUsDetails = () => {
     }
   };
 
-  const handleDeleteSavedDetail = async (index: number) => {
+  const handleDeleteSavedDetail = async (detail: AboutUsDetail) => {
     if (window.confirm('Are you sure you want to delete this detail?')) {
       try {
-        const aboutUsId = 1;
-        const updatedDetails = savedDetails.filter((_, i) => i !== index);
-
-        const response = await axios.put(`/api/admin/about-us/${aboutUsId}`, {
-          aboutUsData: res,
-          aboutUsDetailsData: updatedDetails.map(detail => ({
-            ...detail,
-            Title: detail.Title.trim()
-          }))
-        });
-
-        console.log("Delete response:", response.data);
-        setSavedDetails(updatedDetails);
-        alert("Detail deleted successfully!");
+        if (detail.id) {
+          const response = await axios.delete(`/api/admin/about-us/${detail.id}`);
+          
+          if (response.status === 200) {
+            const updatedDetails = savedDetails.filter(d => d.id !== detail.id);
+            setSavedDetails(updatedDetails);
+            console.log("Detail deleted successfully!");
+          } else {
+            console.error("Failed to delete detail. Status:", response.status);
+          }
+        } else {
+          console.error("Detail has no ID");
+        }
       } catch (error) {
         console.error("Error deleting detail", error);
-        alert("Error deleting detail. Please try again.");
       }
     }
   };
 
-  const handleSubmit = async (formData: any) => {
-    console.log("Full form data:", formData);
-    console.log("Initial About Us Data:", initialAboutUsData);
-    console.log("Available Icons:", icons);
-  
+  const handleSubmit = async (formData: FormData) => {
     try {
       // Find keys that include 'details'
       const detailKeys = Object.keys(formData).filter(key => key.includes('details'));
   
-      const newDetails = detailKeys.flatMap(key => {
+      const newDetails: AboutUsDetail[] = detailKeys.flatMap(key => {
         try {
-          const parsedDetails = JSON.parse(formData[key]);
-          console.log(`Parsed details for key ${key}:`, parsedDetails);
+          // Safely parse details
+          const parsedDetails: FormDetail[] = JSON.parse(formData[key] as string);
   
-          return parsedDetails.map((detail: any) => {
+          return parsedDetails.map((detail) => {
             // Find the corresponding icon
             const foundIcon = icons.find(icon => 
-              icon.IconName === detail.icon_id || 
-              icon.IconID === detail.icon_id
+              icon.IconName === String(detail.icon_id) || 
+              icon.IconID === Number(detail.icon_id)
             );
   
             return {
-              Title: detail.title || detail.Title,
+              Title: (detail.title || detail.Title || '').toString(),
               IconID: foundIcon ? foundIcon.IconID : 0,
-              IconName: foundIcon ? foundIcon.IconName : ''
+              IconName: foundIcon ? foundIcon.IconName : 'Unknown Icon'
             };
           });
         } catch (error) {
           console.error(`Error parsing details for key ${key}:`, error);
           return [];
         }
-      }).filter((detail: any) => detail.Title && detail.IconID);
+      }).filter((detail): detail is AboutUsDetail => 
+        !!detail.Title && detail.IconID !== 0 && detail.IconName !== 'Unknown Icon'
+      );
       
       console.log("Parsed new details:", newDetails);
   
@@ -196,46 +285,29 @@ const AboutUsDetails = () => {
         formData.title !== initialAboutUsData?.title ||
         formData.description !== initialAboutUsData?.description ||
         formData.picture !== initialAboutUsData?.picture;
-  
-      console.log("Main data changes:", {
-        name: formData.name !== initialAboutUsData?.name,
-        title: formData.title !== initialAboutUsData?.title,
-        description: formData.description !== initialAboutUsData?.description,
-        picture: formData.picture !== initialAboutUsData?.picture
-      });
+
   
       const hasDetailsChanges = 
         JSON.stringify(newDetails) !== JSON.stringify(savedDetails);
   
-      console.log("New details length:", newDetails.length);
-      console.log("Saved details:", savedDetails);
-      console.log("Details changed:", hasDetailsChanges);
-  
       const hasChanges = hasMainDataChanges || hasDetailsChanges;
-  
-      console.log("Overall changes detected:", hasChanges);
-  
+    
       if (hasChanges) {
         const aboutUsId = 1;
         
         const response = await axios.put(`/api/admin/about-us/${aboutUsId}`, {
           aboutUsData: {
-            name: formData.name,
-            title: formData.title,
-            description: formData.description,
-            picture: formData.picture
+            name: formData.name || '',
+            title: formData.title || '',
+            description: formData.description || '',
+            picture: formData.picture || null
           },
           aboutUsDetailsData: [...savedDetails, ...newDetails]
         });
         
         console.log("Submit response:", response.data);
         
-        // Update saved details and initial data
         setSavedDetails(prev => [...prev, ...newDetails]);
-        setInitialAboutUsData(prev => ({
-          ...prev,
-          aboutUsDetails: [...(prev.aboutUsDetails || []), ...newDetails]
-        }));
         
         alert("Data updated successfully!");
       } else {
@@ -263,23 +335,29 @@ const AboutUsDetails = () => {
     );
   }
   const additionalFormElements = [
-  {
-    name: "title",
-    type: "text",
-    label: "Title",
-    placeholder: "Enter the title"
-  },
-  {
-    name: "icon_id",
-    type: "select",
-    label: "Icon",
-    placeholder: "Select the Icon",
-    options: icons.map(icon => ({
-      id: icon.IconID,     // Database IconID
-      name: icon.IconName  // Display name
-    }))
-  }
-];
+    {
+      name: "title",
+      type: "text",
+      label: "Title",
+      placeholder: "Enter the title"
+    },
+    {
+      name: "icon_id",
+      type: "select",
+      label: "Icon",
+      placeholder: "Select the Icon",
+      options: icons.map(icon => ({
+        id: icon.IconID,     
+        name: icon.IconName  
+      }))
+    }
+  ] as DetailFormElement[];
+  const initialValues: Record<string, string> = res ? {
+    name: res.name || '',
+    title: res.title || '',
+    description: res.description || '',
+    picture: res.picture || ''
+  } : {};
   return (
     <div className="mt-5 max-w-5xl mx-auto space-y-8">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -288,9 +366,9 @@ const AboutUsDetails = () => {
         </div>
         <div>
           <MultipleForm
-            elements={formElements}
+            elements={typedFormElements}
             onSubmitAction={handleSubmit}
-            initialValues={res}
+            initialValues={initialValues}
             additionalForms={[
               {
                 title: "Additional Form",
@@ -312,6 +390,7 @@ const AboutUsDetails = () => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
+                    {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Id</th> */}
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Icon</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Actions</th>
@@ -319,13 +398,16 @@ const AboutUsDetails = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {savedDetails.map((detail, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
+                    <tr
+                      key={detail.id || index}
+                      className="hover:bg-gray-50"
+                    >
                       <td className="px-6 py-4">
                         {editMode && editingIndex === index ? (
                           <input
                             type="text"
                             value={detail.Title}
-                            onChange={(e) => handleInputChange(index, "Title", e.target.value)}
+                            onChange={(e) => {handleInputChange(index, 'Title', e.target.value)}}
                             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
                           />
                         ) : (
@@ -336,7 +418,7 @@ const AboutUsDetails = () => {
                         {editMode && editingIndex === index ? (
                           <select
                             value={detail.IconID}
-                            onChange={(e) => handleInputChange(index, "IconID", e.target.value)}
+                            onChange={(e) => {handleInputChange(index, 'IconID', Number(e.target.value))}}
                             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
                           >
                             <option value={0}>Select an icon</option>
@@ -349,12 +431,10 @@ const AboutUsDetails = () => {
                         ) : (
                           <span className="text-sm text-gray-900">
                             {(() => {
-                              // First, check if IconName is directly available from the detail
                               if (detail.IconName) {
                                 return detail.IconName;
                               }
 
-                              // If not, fall back to finding icon in icons array
                               const foundIcon = icons.find(icon => icon.IconID === detail.IconID);
 
                               console.log('Searching for icon:', {
@@ -377,13 +457,13 @@ const AboutUsDetails = () => {
                                 onClick={handleSaveEdit}
                                 className="text-green-600 hover:text-green-900 focus:outline-none"
                               >
-                                <LucideCheck className="w-5 h-5" />
+                                <Check className="w-5 h-5" />
                               </button>
                               <button
                                 onClick={handleCancelEdit}
                                 className="text-gray-600 hover:text-gray-900 focus:outline-none"
                               >
-                                <LucideX className="w-5 h-5" />
+                                <X className="w-5 h-5" />
                               </button>
                             </>
                           ) : (
@@ -392,13 +472,13 @@ const AboutUsDetails = () => {
                                 onClick={() => handleEditClick(index)}
                                 className="text-blue-600 hover:text-blue-900 focus:outline-none"
                               >
-                                <LucidePencil className="w-5 h-5" />
+                                <Pencil className="w-5 h-5" />
                               </button>
                               <button
-                                onClick={() => handleDeleteSavedDetail(index)}
+                                onClick={() => handleDeleteSavedDetail(detail)}
                                 className="text-red-600 hover:text-red-900 focus:outline-none"
                               >
-                                <LucideDelete className="w-5 h-5" />
+                                <Delete className="w-5 h-5" />
                               </button>
                             </>
                           )}

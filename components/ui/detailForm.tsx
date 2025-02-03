@@ -1,16 +1,9 @@
-"use client";
-
-import React, { useState, useEffect } from 'react';
-import { LucidePlus, LucideDelete } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Plus, Trash } from 'lucide-react';
+import { DetailFormElement } from "./multipleForm";
 
 interface DetailFormProps {
-  fields: {
-    name: string;
-    type: string;
-    label: string;
-    placeholder?: string;
-    options?: string[];
-  }[];
+  fields: DetailFormElement[];
   initialRows?: Record<string, string>[];
   onRowsChange?: (rows: Record<string, string>[]) => void;
 }
@@ -21,38 +14,56 @@ export default function DetailForm({
   onRowsChange 
 }: DetailFormProps) {
   const [rows, setRows] = useState<Record<string, string>[]>(initialRows);
+  const [lastNotifiedRows, setLastNotifiedRows] = useState<Record<string, string>[]>(initialRows);
 
   useEffect(() => {
-    // Log rows whenever they change
-    console.log('DetailForm rows updated:', rows);
-    onRowsChange?.(rows);
-  }, [rows]);
+    // Only call onRowsChange if rows have actually changed
+    const hasChanged = JSON.stringify(rows) !== JSON.stringify(lastNotifiedRows);
+    
+    if (hasChanged) {
+      // Use a timeout to debounce the change
+      const timerId = setTimeout(() => {
+        onRowsChange?.(rows);
+        setLastNotifiedRows(rows);
+      }, 300);
 
-  const handleInputChange = (index: number, field: string, value: string) => {
-    const updatedRows = [...rows];
-    updatedRows[index] = {
-      ...updatedRows[index],
-      [field]: value
-    };
-    setRows(updatedRows);
-  };
+      // Cleanup function to cancel the timeout if component unmounts or rows change again
+      return () => clearTimeout(timerId);
+    }
+  }, [rows, onRowsChange, lastNotifiedRows]);
 
-  const handleAddClick = () => {
-    const newRow = fields.reduce((acc, field) => {
-      acc[field.name] = '';
-      return acc;
-    }, {} as Record<string, string>);
+  const handleInputChange = useCallback((index: number, field: string, value: string) => {
+    setRows(prevRows => {
+      const updatedRows = [...prevRows];
+      
+      // Only update if the value is actually different
+      const currentValue = updatedRows[index]?.[field];
+      if (currentValue === value) return prevRows;
 
-    const updatedRows = [...rows, newRow];
-    setRows(updatedRows);
-  };
+      updatedRows[index] = {
+        ...updatedRows[index],
+        [field]: value
+      };
+      return updatedRows;
+    });
+  }, []);
 
-  const handleDeleteClick = (index: number) => {
-    const updatedRows = rows.filter((_, i) => i !== index);
-    setRows(updatedRows);
-  };
+  const handleAddClick = useCallback(() => {
+    setRows(prevRows => {
+      const newRow = fields.reduce((acc, field) => {
+        acc[field.name] = '';
+        return acc;
+      }, {} as Record<string, string>);
 
-  const renderInputField = (row: Record<string, string>, field: any, index: number) => {
+      return [...prevRows, newRow];
+    });
+  }, [fields]);
+
+  const handleDeleteClick = useCallback((index: number) => {
+    setRows(prevRows => prevRows.filter((_, i) => i !== index));
+  }, []);
+
+  const renderInputField = useCallback((row: Record<string, string>, field: DetailFormElement, index: number) => {
     switch (field.type) {
       case 'text':
         return (
@@ -87,25 +98,25 @@ export default function DetailForm({
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
           />
         );
-        case 'select':
-            return (
-              <select
-                value={row[field.name] || ''}
-                onChange={(e) => handleInputChange(index, field.name, e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
-              >
-                <option value="">Select {field.label}</option>
-                {field.options?.map((option: any) => (
-                  <option key={option.id} value={option.name}>
-                    {option.name}
-                  </option>
-                ))}
-              </select>
-            );
+      case 'select':
+        return (
+          <select
+            value={row[field.name] || ''}
+            onChange={(e) => handleInputChange(index, field.name, e.target.value)}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-gray-500"
+          >
+            <option value="">Select {field.label}</option>
+            {field.options?.map((option) => (
+              <option key={option.id} value={option.name}>
+                {option.name}
+              </option>
+            ))}
+          </select>
+        );
       default:
         return null;
     }
-  };
+  }, [handleInputChange]);
 
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -115,7 +126,7 @@ export default function DetailForm({
           onClick={handleAddClick}
           className="inline-flex items-center justify-center p-1.5 text-gray-700 bg-white border border-gray-900 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
         >
-          <LucidePlus className="w-5 h-5" />
+          <Plus className="w-5 h-5" />
         </button>
       </div>
 
@@ -150,7 +161,7 @@ export default function DetailForm({
                       onClick={() => handleDeleteClick(index)}
                       className="text-red-600 hover:text-red-900 focus:outline-none"
                     >
-                      <LucideDelete className="w-5 h-5" />
+                      <Trash className="w-5 h-5" />
                     </button>
                   </td>
                 </tr>

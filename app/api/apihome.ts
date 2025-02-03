@@ -13,7 +13,7 @@ export async function siteSetting() {
   try {
     const pool = await getDbPool();
 
-    let query = 'SELECT TOP 1 id, name, specialist, description, logo, image FROM settings';
+    const query = 'SELECT TOP 1 id, name, specialist, description, logo, image FROM settings';
 
     const result = await pool.request()
       .query(query);
@@ -21,6 +21,7 @@ export async function siteSetting() {
     return setting || null; 
 
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch settings data' }, { status: 500 });
+    const typedError = error as Error;
+    return NextResponse.json({ error: 'Error updating user', details: typedError.message }, { status: 500 });
   }
 }

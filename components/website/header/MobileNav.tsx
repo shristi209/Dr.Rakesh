@@ -5,12 +5,20 @@ import { Menu, Phone } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import LoginRegisterButton from "@/components/modal/LoginRegistrationButton";
+import { useState, useEffect } from "react";
+import LoginRegistrationButton from "@/components/modal/LoginRegistrationButton";
+import Cookies from 'js-cookie';
 
 export default function MobileNav() {
   const pathname = usePathname();
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [open, setOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    const token = Cookies.get('token');
+    // setIsLoggedIn(!!token);
+    console.log(token);
+  }, []);
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -24,8 +32,9 @@ export default function MobileNav() {
     setOpen(false);
   };
 
+
   return (
-    <div className="  md:hidden bg-green-200 border-green-500 border-2 w-10 h-10 rounded-3xl items-center text-center flex justify-center ">
+    <div className="md:hidden bg-green-200 border-green-500 border-2 w-10 h-10 rounded-3xl items-center text-center flex justify-center ">
       <Sheet>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
@@ -38,6 +47,9 @@ export default function MobileNav() {
             className="w-[300px] sm:w-[400px] h-auto max-h-[36vh] overflow-y-auto bg-white/70 "
           >
             <nav className="flex flex-col gap-4">
+              <div className="mt-2 flex justify-end">
+                <LoginRegistrationButton />
+              </div>
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
@@ -60,7 +72,14 @@ export default function MobileNav() {
                 <Phone className="h-4 w-4" />
                 <a href="tel:+9779809627872">+977-9809627872</a>
               </Button>
-              <LoginRegisterButton></LoginRegisterButton>
+
+              {/* 
+              <Button
+                className="mt-4 flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700"
+                onClick={openModal}
+              >
+                Login
+              </Button> */}
             </nav>
           </SheetContent>
         </Sheet>

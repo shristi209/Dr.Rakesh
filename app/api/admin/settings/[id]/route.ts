@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { writeFile } from 'fs/promises';
 import path from 'path';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const id = 1;
     const pool = await getDbPool();
@@ -22,7 +22,8 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(contact);
 
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch settings data' }, { status: 500 });
+    const typedError = error as Error;
+    return NextResponse.json({ error: 'Error updating user', details: typedError.message }, { status: 500 });
   }
 }
 

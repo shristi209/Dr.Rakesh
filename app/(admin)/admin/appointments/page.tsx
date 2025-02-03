@@ -1,11 +1,11 @@
 import { Breadcrumb } from "@/components/website/Breadcrumb";
 import AppointmentReceived from "@/components/dashboard/appointmentReceived";
-import { AppointData, getAppointment } from "@/app/api/appointment/route";
+import { getAppointment } from "@/app/api/appointment/route";
 
-interface PageProps {
-  appointData: AppointData[];
-  error: string | null;
-}
+// interface PageProps {
+//   appointData: AppointData[];
+//   error: string | null;
+// }
 
 export default async function Page() {
   const appointData = await getAppointment();

@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import data from '../../../../../public/data/addUser.json'
 import axios from "axios";
 import { wrapFormSubmit } from "@/lib/form-utils";
-import { OK } from "zod";
 
 export default function Page() {
   const breadcrumbItems = [
@@ -40,10 +39,20 @@ export default function Page() {
   return (
     <>
       <Breadcrumb items={breadcrumbItems} />
-      <DynamicForm 
-        elements={data.elements} 
-        onSubmitAction={wrapFormSubmit(handleFormSubmit)} 
-      />
+
+      <div className="mt-5 mx-auto space-y-8">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
+            <h2 className="text-lg font-semibold text-gray-800">Add User </h2>
+          </div>
+          <div className="p-6">
+            <DynamicForm
+              elements={data.elements}
+              onSubmitAction={wrapFormSubmit(handleFormSubmit)}
+            />
+          </div>
+        </div>
+      </div>
     </>
   )
 }

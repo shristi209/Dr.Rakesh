@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
       );
     `;
 
-    const result = await pool.request()
+    await pool.request()
       .input('fullname', fullname)
       .input('email', email)
       .input('phonenumber', phonenumber)
@@ -144,7 +144,4 @@ export async function POST(req: NextRequest) {
     console.error('Error booking appointment:', error);
     return NextResponse.json({ error: 'Failed to book appointment' }, { status: 500 });
   }
-}
-function getCookie() {
-  throw new Error('Function not implemented.');
 }

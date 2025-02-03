@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       );
     }
     
-    const result = await pool.request()
+    await pool.request()
       .input('name', name)
       .input('email', email)
       .input('password', passwordHash)

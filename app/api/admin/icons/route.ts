@@ -1,11 +1,11 @@
 import { getDbPool } from "@/admin/utils/db";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const pool = await getDbPool();
 
-    let query = 'SELECT * FROM Icons';
+    const query = 'SELECT * FROM Icons';
 
     const result = await pool.request()
       .query(query);
@@ -14,6 +14,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(Icons);
 
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch Icons data' }, { status: 500 });
+    const typedError = error as Error;
+    return NextResponse.json({ error: 'Failed to fetch Icons data' , details: typedError.message }, { status: 500 });
   }
 }

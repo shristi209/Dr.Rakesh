@@ -41,6 +41,7 @@ export async function post(req: NextRequest) {
 
         await request.query(query);
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch settings data' }, { status: 500 });
+        const typedError = error as Error;
+        return NextResponse.json({ error: 'Error updating user', details: typedError.message }, { status: 500 });
     }
 }
