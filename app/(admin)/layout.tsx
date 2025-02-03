@@ -31,7 +31,6 @@ export default async function AdminLayout({
       
       userId = payload.id;
 
-      console.log("User ID from token:", userId);
     } catch (err) {
       console.error("Error verifying token:", err);
     }

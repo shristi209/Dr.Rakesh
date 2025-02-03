@@ -83,9 +83,13 @@ const ServicesDetails = () => {
   };
 
 
-  const handleEditClick = (index: number) => {
-    setEditMode(true);
-    setEditingIndex(index);
+  const handleEditClick = (detail: ServicesDetail) => {
+    const detailIndex = savedDetails.findIndex(savedDetail => savedDetail.id === detail.id);
+    
+    if (detailIndex !== -1) {
+      setEditingIndex(detailIndex);
+      setEditMode(true);
+    }
   };
 
   const handleCancelEdit = () => {
@@ -116,22 +120,13 @@ const ServicesDetails = () => {
     }
   };
 
-  const handleDeleteSavedDetail = async (index: number) => {
+  const handleDeleteSavedDetail = async (detail: ServicesDetail) => {
     if (window.confirm('Are you sure you want to delete this detail?')) {
       try {
-        const servicesId = 1;
-        const updatedDetails = savedDetails.filter((_, i) => i !== index);
+        const updatedDetails = savedDetails.filter(savedDetail => savedDetail.id !== detail.id);
         
-        const response = await axios.put(`/api/admin/services/${servicesId}`, {
-          servicesData: res,
-          servicesDetailsData: updatedDetails.map(detail => ({
-            ...detail,
-            ServiceTitle: detail.ServiceTitle.trim(),
-            ServiceDescription: detail.ServiceDescription.trim(),
-            ServicePicture: detail.ServicePicture.trim() || null
-          }))
-        });
-        
+        const response = await axios.delete(`/api/admin/services/${detail.id}`);
+      
         console.log("Delete response:", response.data);
         setSavedDetails(updatedDetails);
         alert("Detail deleted successfully!");
@@ -153,6 +148,7 @@ const ServicesDetails = () => {
           const parsedDetails: ServicesDetail[] = JSON.parse(formData[key]);
           
           return parsedDetails.map(detail => ({
+            id: detail.id, // Preserve existing id if present
             ServiceTitle: detail.ServiceTitle || '',
             ServiceDescription: detail.ServiceDescription || '',
             ServicePicture: detail.ServicePicture || ''
@@ -285,7 +281,7 @@ const ServicesDetails = () => {
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {savedDetails.map((detail, index) => (
-                    <tr key={index} className="hover:bg-gray-50">
+                    <tr key={detail.id || index} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         {editMode && editingIndex === index ? (
                           <input
@@ -341,13 +337,13 @@ const ServicesDetails = () => {
                           ) : (
                             <>
                               <button
-                                onClick={() => handleEditClick(index)}
+                                onClick={() => handleEditClick(detail)}
                                 className="text-blue-600 hover:text-blue-900 focus:outline-none"
                               >
                                 <Pencil className="w-5 h-5" />
                               </button>
                               <button
-                                onClick={() => handleDeleteSavedDetail(index)}
+                                onClick={() => handleDeleteSavedDetail(detail)}
                                 className="text-red-600 hover:text-red-900 focus:outline-none"
                               >
                                 <Delete className="w-5 h-5" />

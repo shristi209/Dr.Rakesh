@@ -25,3 +25,34 @@ export function wrapFormSubmit<T extends (data: Record<string, string>) => Promi
     return submitAction(processedData);
   };
 }
+
+import { DynamicFormElement } from "@/components/ui/multipleForm";
+
+// Utility type for form configuration
+export interface FormField {
+    name: string;
+    label: string;
+    type: string;
+    placeholder?: string;
+    options?: string[];
+    required?: boolean;
+}
+
+// Convert FormField to DynamicFormElement
+export function convertFormFields(fields: FormField[]): DynamicFormElement[] {
+    return fields.map(field => {
+        // Map generic type to specific DynamicFormElement type
+        const convertedType = field.type === 'input' ? 'text' : 
+                              field.type === 'dropdown' ? 'select' : 
+                              field.type;
+
+        return {
+            name: field.name,
+            label: field.label,
+            type: convertedType as 'text' | 'textarea' | 'file' | 'select',
+            placeholder: field.placeholder,
+            options: field.options,
+            required: field.required
+        };
+    });
+}

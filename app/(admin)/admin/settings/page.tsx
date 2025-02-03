@@ -33,6 +33,7 @@ async function fetchCurrentSettings(): Promise<Record<string, string>> {
       if (setting.image) acc['image'] = setting.image;
       return acc;
     }, {});
+    // console.log('Settings fetched successfully:', settings);
 
     return settings;
   } catch (error) {
@@ -53,6 +54,7 @@ export default async function Page() {
   ];
 
   const currentSettings = await fetchCurrentSettings();
+  console.log('Current Settings:', currentSettings);
 
   return (
     <>

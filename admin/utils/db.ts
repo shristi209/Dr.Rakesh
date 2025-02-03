@@ -30,9 +30,7 @@ export const getDbPool = async () => {
         (tls as any).DEFAULT_MIN_VERSION = 'TLSv1.2';
         
         pool = await sql.connect(config);
-        console.log('Database connected successfully');
-      } catch (error) {
-        console.error('Error connecting to the database:', error);
+      } catch  {
         throw new Error('Database connection failed');
       }
     }

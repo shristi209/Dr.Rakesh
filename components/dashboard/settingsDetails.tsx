@@ -3,6 +3,7 @@ import DynamicForm from "../ui/dynamicForm";
 import settingForm from "../../public/data/settingForm.json";
 import axios from "axios";
 import { useState } from "react";
+import { convertFormFields } from "@/lib/form-utils";
 
 interface FormField {
     name: string;
@@ -25,6 +26,8 @@ const SettingsDetails: React.FC<SettingsDetailsProps> = ({ initialSettings }) =>
 
     const [settings, setSettings] = useState<Record<string, string>>(initialSettings);
     const formConfig = settingForm as FormConfig;
+// console.log("Settings......................", settings);
+
 
     const handleFormSubmit = async (data: Record<string, string | File>) => {
         try {
@@ -68,6 +71,7 @@ const SettingsDetails: React.FC<SettingsDetailsProps> = ({ initialSettings }) =>
                 console.log('Updated Settings:', updatedSettings);
                 return updatedSettings;
             });
+            console.log('Settings updated successfully:', settings);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const errorMessage = error.response?.data?.message || 'An unexpected error occurred';
@@ -86,8 +90,8 @@ const SettingsDetails: React.FC<SettingsDetailsProps> = ({ initialSettings }) =>
                 </div>
                 <div className='p-6'>
                     <DynamicForm
-                        elements={formConfig.fields}
-                        initialValues={settings}
+                        elements={convertFormFields(formConfig.fields)}
+                        formData={settings}
                         onSubmitAction={handleFormSubmit}
                     />
                 </div>
