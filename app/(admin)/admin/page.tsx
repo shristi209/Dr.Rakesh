@@ -88,7 +88,7 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-lg shadow-sm border">
+      {/* <div className="bg-white rounded-lg shadow-sm border">
         <div className="p-6 border-b">
           <h2 className="text-lg font-semibold">Recent Activity</h2>
         </div>
@@ -106,7 +106,7 @@ export default async function AdminDashboard() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
