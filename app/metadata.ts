@@ -13,8 +13,8 @@ export const metadata: Metadata = {
     type: "website",
   },
   icons: {
-    icon: "/favicon.ico", // Default favicon
-    shortcut: "/favicon.ico", // Shortcut icon for browsers
-    apple: "/favicon.ico", // Apple touch icon for iOS
+    icon: "/favicon.ico", 
+    shortcut: "/favicon.ico", 
+    apple: "/favicon.ico", 
   },
 };

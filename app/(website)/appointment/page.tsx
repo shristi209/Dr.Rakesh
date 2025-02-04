@@ -1,6 +1,10 @@
 import { Breadcrumb } from "@/components/website/Breadcrumb";
 import Appointments from "@/components/appointment";
 
+export const metadata ={
+  title: "Dr. Rakesh Yadav - Appointment",
+}
+
 export default async function AppointmentPage() {
 
   const breadcrumbItems = [
