@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest) {
             name: 'userRole',
             value: payload.role,
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            // secure: process.env.NODE_ENV === 'production',
             maxAge: 60 * 60 * 24,
             path: '/',
         });
