@@ -1,7 +1,6 @@
 import { getDbPool } from "@/admin/utils/db";
 import {
   Users,
-  Activity,
   HeartPulse,
 } from 'lucide-react';
 
@@ -50,20 +49,6 @@ export default async function AdminDashboard() {
     }
   ];
 
-  const activities = [
-    {
-      icon: Users,
-      title: 'New user registered',
-      description: 'John Doe created a new account',
-      time: '5 min ago',
-    },
-    {
-      icon: Activity,
-      title: 'New Appointment',
-      description: 'New Appointment Booked',
-      time: '1 hour ago',
-    }
-  ];
 
   return (
     <div className="space-y-8">
