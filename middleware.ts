@@ -24,9 +24,9 @@ export async function middleware(request: NextRequest) {
         response.cookies.set({
             name: 'userRole',
             value: payload.role,
-            httpOnly: true,
+            httpOnly: false,
             // secure: process.env.NODE_ENV === 'production',
-            maxAge: 60 * 60 * 24,
+            maxAge: 60 * 60 ,
             path: '/',
         });
 
