@@ -2,27 +2,33 @@
 
 import { Card } from "@/components/ui/card";
 import { Phone, Clock, Mail } from "lucide-react";
+import { ContactInformation } from "@/app/api/apicontact";
+
+interface ContactPageProps {
+  contactData: ContactInformation | null;
+}
+
+export default function ContactMarquee({ contactData }: ContactPageProps) {
 
 const marqueeItems = [
   {
     icon: Phone,
-    text: "Book Appointment: +977-9809627872",
+    text: [contactData?.phone || ""],
   },
   {
     icon: Clock,
-    text: "Working Hours: Mon to Fri : 10:00 To 6:00",
+    text: contactData?.working_hours.split(",") || [],
   },
   {
     icon: Phone,
-    text: "Emergency No. : +977-9809627872",
+    text:`Emergency number: ${contactData?.emergency_num || ""}`,
   },
   {
     icon: Mail,
-    text: "For any additional queries: drrakeshyadav2073@gmail.com",
+    text:  [contactData?.email || ""],
   },
 ];
 
-export function ContactMarquee() {
   return (
     <div className="w-full bg-primary/5 py-4 overflow-hidden">
       <div className="flex animate-marquee whitespace-nowrap">

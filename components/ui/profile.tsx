@@ -6,8 +6,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 interface ProfileButtonProps {
-  title: string;
-  link: string;
+  title?: string;
+  link?: string;
 }
 
 const ProfileButton: React.FC<ProfileButtonProps> = ({ title, link }) => {
@@ -33,11 +33,13 @@ const ProfileButton: React.FC<ProfileButtonProps> = ({ title, link }) => {
         {isModalOpen && (
           <div className="absolute mt-2 w-48 bg-white border rounded-lg shadow-lg z-50 right-0">
             <ul className="flex flex-col p-2">
-              <li className="p-2 hover:bg-gray-100 cursor-pointer">
-                <Link href={link}>
-                  {title}
-                </Link>
-              </li>
+              {title && link && (
+                <li className="p-2 hover:bg-gray-100 cursor-pointer">
+                  <Link href={link}>
+                    {title}
+                  </Link>
+                </li>
+              )}
               <li
                 className="p-2 hover:bg-gray-100 cursor-pointer text-red-600"
                 onClick={handleLogout}

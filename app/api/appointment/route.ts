@@ -97,7 +97,7 @@ export async function getAppointmentById(userEmail: string): Promise<AppointData
 export async function POST(req: NextRequest) {
   try {
     const { fullname, email, phonenumber, service, date, time, note, user_id } = await req.json();
-    console.log("Received data:", { fullname, email, phonenumber, service, date, time, note, user_id });
+    // console.log("Received data:", { fullname, email, phonenumber, service, date, time, note, user_id });
 
     if (!user_id) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 });

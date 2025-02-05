@@ -30,6 +30,7 @@ const Sidebar = ({ role }: SidebarProps) => {
             <SideBar title={"Services"} link={"/admin/services"} icon={LucideHeartPulse} />
             <SideBar title={"About Us"} link={"/admin/about-us"} icon={LucideHandshake} />
             <SideBar title={"Appointments"} link={"/admin/appointments"} icon={LucideNotebook} />
+            {/* <SideBar title={"Messages"} link={"/admin/messages"} icon={LucideNotebook} /> */}
             <SideBar title={"Settings"} link={"/admin/settings"} icon={LucideSettings} />
           </>
         )}

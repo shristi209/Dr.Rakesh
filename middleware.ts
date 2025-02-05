@@ -11,6 +11,7 @@ export async function middleware(request: NextRequest) {
     try {
         const token = request.cookies.get('token')?.value;
         const currentPath = request.nextUrl.pathname;
+        console.log("token",token)
 
         if (!token) {
             return NextResponse.redirect(new URL('/', request.url));
@@ -20,7 +21,8 @@ export async function middleware(request: NextRequest) {
         const { payload } = await jwtVerify(token, secretKey) as { payload: JWTPayload };
 
         const response = NextResponse.next();
-
+        
+console.log("response",response)
         response.cookies.set({
             name: 'userRole',
             value: payload.role,

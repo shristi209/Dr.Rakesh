@@ -16,10 +16,10 @@ import {
 } from "@/components/ui/form";
 import { Card } from "@/components/ui/card";
 import { MapPin, Mail, Phone, Clock } from "lucide-react";
-import { ContactMarquee } from "./contactMarquee";
 import { ContactMap } from "./contactMap";
 import axios from "axios";
 import { ContactInformation } from "@/app/api/apicontact";
+import ContactMarquee from "./contactMarquee";
 
 interface ContactInfoItem {
   icon: React.ElementType;
@@ -28,7 +28,7 @@ interface ContactInfoItem {
 }
 
 const formSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
+  fullName: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone number must be at least 10 digits"),
   subject: z.string().min(5, "Subject must be at least 5 characters"),
@@ -39,12 +39,20 @@ interface ContactPageProps {
   contactData: ContactInformation | null;
 }
 
+type ContactFormValues = {
+  fullName: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+};
+
 export default function ContactPage({ contactData }: ContactPageProps) {
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<ContactFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
+      fullName: "",
       email: "",
       phone: "",
       subject: "",
@@ -77,11 +85,13 @@ export default function ContactPage({ contactData }: ContactPageProps) {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+      console.log("values", values);
       await axios.post("/api/contact", values);
+      alert("Message sent successfully!");
       toast.success("Message sent successfully!");
       form.reset();
     } catch (error) {
-      toast.error("Failed to send message. Please try again.");
+      alert("Failed to send message. Please try again.");
       console.error(error);
     }
   };
@@ -130,7 +140,7 @@ export default function ContactPage({ contactData }: ContactPageProps) {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField
                     control={form.control}
-                    name="name"
+                    name="fullName"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Full Name</FormLabel>
@@ -207,7 +217,7 @@ export default function ContactPage({ contactData }: ContactPageProps) {
           </div>
         </div>
 
-        <ContactMarquee />
+        <ContactMarquee contactData={contactData} />
         {/* Map Section */}
         <ContactMap />
       </div>

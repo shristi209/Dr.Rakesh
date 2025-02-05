@@ -17,9 +17,13 @@ async function fetchDashboardStats() {
       .query('SELECT COUNT(*) as count FROM ServicesDetail');
     const servicesCount = servicesResult.recordset[0].count;
 
+    const messagesData = await pool.request().query('SELECT fullName, email, phone, subject, message, created_at  FROM contactMessage');
+    const messages = messagesData.recordset;
+
     return {
       patientCount: patientCount.toString(),
       servicesCount: servicesCount.toString(),
+      messages
     };
   } catch (error) {
     console.error("Error fetching dashboard stats:", error);
@@ -31,9 +35,10 @@ async function fetchDashboardStats() {
 }
 
 export default async function AdminDashboard() {
-  const { 
-    patientCount, 
-    servicesCount 
+  const {
+    patientCount,
+    servicesCount,
+    messages
   } = await fetchDashboardStats();
 
   const stats = [
@@ -47,6 +52,7 @@ export default async function AdminDashboard() {
       value: servicesCount,
       icon: HeartPulse,
     }
+
   ];
 
 
@@ -73,25 +79,28 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Recent Activity */}
-      {/* <div className="bg-white rounded-lg shadow-sm border">
+      <div className="bg-white rounded-lg shadow-sm border">
         <div className="p-6 border-b">
           <h2 className="text-lg font-semibold">Recent Activity</h2>
         </div>
         <div className="divide-y">
-          {activities.map((activity, index) => (
+          {messages.map((activity, index) => (
             <div key={index} className="p-6 flex items-center space-x-4">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <activity.icon className="w-5 h-5 text-primary" />
+                <Users className="w-5 h-5 text-primary" /> 
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900">{activity.title}</p>
-                <p className="text-sm text-gray-600">{activity.description}</p>
+                <p className="text-sm font-medium text-gray-900">New Message Received from {activity.fullName}</p>
+                <p className="text-sm text-gray-600">Email: {activity.email} Phone: {activity.phone}</p>
+                <p className="text-sm text-gray-600">Subject: {activity.subject}</p>
+                <p className="text-sm text-gray-600">Message: {activity.message}</p>
               </div>
-              <span className="text-sm text-gray-600">{activity.time}</span>
+              <span className="text-sm text-gray-600">{new Date(activity.created_at).toLocaleString()}</span> 
             </div>
           ))}
+
         </div>
-      </div> */}
+      </div>
     </div>
   );
 }

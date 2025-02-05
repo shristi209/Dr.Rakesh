@@ -12,7 +12,7 @@ const useAuth = () => {
     
     if (token) {
       try {
-        const secret = new TextEncoder().encode(process.env.JWT_SECRET_KEY || ''); 
+        const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT_SECRET_KEY || ''); 
         
         if (!secret.length) {
           setError('JWT secret is not configured');

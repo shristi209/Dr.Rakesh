@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "./modal/Modal";
-import useAuth from '../hooks/useAuth'; 
+import useAuth from '../hooks/useAuth';
 
 const Appointments = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,7 +10,9 @@ const Appointments = () => {
     const [showLoginMessage, setShowLoginMessage] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const { user } = useAuth();
+    const [services, setServices] = useState<string[]>([]);
 
+// console.log("user..................",user);
     useEffect(() => {
         const getCookieValue = (name: string) => {
             const cookieString = document.cookie;
@@ -37,11 +39,20 @@ const Appointments = () => {
         "01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM", "05:00 PM"
     ];
 
-    const services = [
-        "Consultation", "Dental Check-up", "Teeth Cleaning",
-        "Cavity Filling", "Root Canal", "Tooth Extraction",
-        "Orthodontic Treatment", "Emergency Dental Care"
-    ];
+    useEffect(() => {
+        const fetchServices = async () => {
+            try {
+                const response = await axios.get('/api/admin/services')
+                const serviceTitles = response.data.map((service: { ServiceTitle: string }) => service.ServiceTitle);
+                setServices(serviceTitles);
+                console.log(serviceTitles);
+            } catch (error) {
+                console.error("Failed to fetch services:", error);
+            }
+        };
+
+        fetchServices();
+    }, []);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -59,7 +70,6 @@ const Appointments = () => {
         });
 
         values['user_id'] = user.id;
-        console.log("User ID being sent:", values['user_id']);
 
         try {
             const response = await axios.post("/api/appointment", values);
