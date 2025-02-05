@@ -13,7 +13,7 @@ interface ServicesDetail {
   id?: number;
   ServiceTitle: string;
   ServiceDescription: string;
-  ServicePicture: string;
+  ServicePicture?: string;
 }
 
 interface ServicesData {
@@ -108,7 +108,7 @@ const ServicesDetails = () => {
           ...detail,
           ServiceTitle: detail.ServiceTitle.trim(),
           ServiceDescription: detail.ServiceDescription.trim(),
-          ServicePicture: detail.ServicePicture.trim() || null
+          ServicePicture: detail.ServicePicture?.trim() || null
         }))
       });
       
