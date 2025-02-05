@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Name",
+        "label": "Name",
+        "type": "text",
+        "required": true
+    },
+    {
+        "name": "Title",
+        "label": "Title",
+        "type": "text",
+        "required": true
+    },
+    {
+        "name": "Description",
+        "label": "Description",
+        "type": "textarea",
+        "required": true
+    }
+]

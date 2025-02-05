@@ -1,0 +1,40 @@
+{
+    "formTitle": "Clinic Settings",
+    "fields": [
+      {
+        "name": "name",
+        "label": "Clinic Name",
+        "type": "text",
+        "placeholder": "Enter clinic name",
+        "defaultValue": "Dr. Rakesh Clinic"
+      },
+      {
+        "name": "specialist",
+        "label": "Primary Specialist",
+        "type": "text", 
+        "placeholder": "Enter primary specialist name",
+        "defaultValue": "Dr. Rakesh Singh"
+      },
+      {
+        "name": "description",
+        "label": "Clinic Description",
+        "type": "textarea",
+        "placeholder": "Enter clinic description",
+        "defaultValue": "Specialized medical clinic providing comprehensive healthcare services"
+      },
+      {
+        "name": "logo",
+        "label": "Clinic Logo",
+        "type": "file",
+        "placeholder": "Upload clinic logo",
+        "defaultValue": "/images/logo.png"
+      },
+      {
+        "name": "image",
+        "label": "Clinic Image",
+        "type": "file",
+        "placeholder": "Upload clinic image",
+        "defaultValue": "/images/clinic.jpg"
+      }
+    ]
+}
