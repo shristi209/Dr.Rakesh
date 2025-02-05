@@ -49,7 +49,7 @@ export async function getServices(): Promise<ServiceData> {
       ...service,
       details: detailData.recordset.map((detail: ServiceDetailData) => ({
         ...detail,
-        ServicePicture: detail.ServicePicture ? `/assests${detail.ServicePicture}` : ''
+        ServicePicture: detail.ServicePicture ? `/assets${detail.ServicePicture}` : ''
       }))
     };
   } catch (error) {

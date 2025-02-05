@@ -8,7 +8,7 @@ import {
   MapPin,
 } from "lucide-react";
 import Image from "next/image";
-import orthopedicSurgeonImage from "../../../public/assests/FRHSJuly23-3002.jpg";
+import orthopedicSurgeonImage from "../../../public/assets/FRHSJuly23-3002.jpg";
 import { ContactInformation } from "@/app/api/apicontact";
 
 interface FooterProps {

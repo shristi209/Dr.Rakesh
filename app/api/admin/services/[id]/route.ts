@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
 }
 
 // Ensure assests directory exists and is writable
-const uploadDir = path.join(process.cwd(), 'public', 'assests');
+const uploadDir = path.join(process.cwd(), 'public', 'assets');
 try {
   // Create directory if it doesn't exist
   if (!fs.existsSync(uploadDir)) {
