@@ -180,7 +180,7 @@ const ServicesDetails = () => {
           servicesDetailsData: [...savedDetails, ...newDetails]
         });
         
-        // console.log("Submit response:", response.data);
+        console.log("Submit response:", response.data);
         
         setSavedDetails(prev => [...prev, ...newDetails]);
         setRows([{ ServiceTitle: "", ServiceDescription: "", ServicePicture: "" }]);
