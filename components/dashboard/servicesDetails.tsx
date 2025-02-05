@@ -42,7 +42,9 @@ const ServicesDetails = () => {
         
         setRes(response.data);
         setInitialServicesData(response.data);
-        
+        console.log("res..............", res)
+        console.log("response..............", response.data)
+        console.log("res..............", response.data)
         // Initialize saved details with existing services details
         if (response.data.servicesDetails && Array.isArray(response.data.servicesDetails)) {
           setSavedDetails(response.data.servicesDetails.map((detail: ServicesDetail) => ({
@@ -161,7 +163,7 @@ const ServicesDetails = () => {
         }
       });
 
-      console.log("Filtered new details:", newDetails);
+      // console.log("Filtered new details:", newDetails);
 
       const hasChanges =
         formData.Name !== initialServicesData?.Name ||
@@ -180,7 +182,7 @@ const ServicesDetails = () => {
           servicesDetailsData: [...savedDetails, ...newDetails]
         });
         
-        console.log("Submit response:", response.data);
+        // console.log("Submit response:", response.data);
         
         setSavedDetails(prev => [...prev, ...newDetails]);
         setRows([{ ServiceTitle: "", ServiceDescription: "", ServicePicture: "" }]);
