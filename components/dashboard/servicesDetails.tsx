@@ -38,7 +38,7 @@ const ServicesDetails = () => {
       try {
         const servicesId = 1;
         const response = await axios.get(`/api/admin/services/${servicesId}`);
-        console.log("Fetched Data:", response.data);
+        // console.log("Fetched Data:", response.data);
         
         setRes(response.data);
         setInitialServicesData(response.data);
@@ -141,7 +141,7 @@ const ServicesDetails = () => {
     try {
 
       const detailKeys = Object.keys(formData).filter(key => key.includes('details'));
-      console.log("Detail keys:", detailKeys);
+      // console.log("Detail keys:", detailKeys);
 
       const newDetails: ServicesDetail[] = detailKeys.flatMap(key => {
         try {
@@ -180,7 +180,7 @@ const ServicesDetails = () => {
           servicesDetailsData: [...savedDetails, ...newDetails]
         });
         
-        console.log("Submit response:", response.data);
+        // console.log("Submit response:", response.data);
         
         setSavedDetails(prev => [...prev, ...newDetails]);
         setRows([{ ServiceTitle: "", ServiceDescription: "", ServicePicture: "" }]);
