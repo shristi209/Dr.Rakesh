@@ -28,8 +28,9 @@ const UsersPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-        const res = await axios.get(`${apiKey}/admin/users`);
+        const apiKey = process.env.NEXT_PUBLIC_BASE_URL;
+        console.log("API Key:", apiKey); 
+        const res = await axios.get(`${apiKey}/api/admin/users`);
         setUsers(res.data);
       } catch (err) {
         setError("Error fetching users");
