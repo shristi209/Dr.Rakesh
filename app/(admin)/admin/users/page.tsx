@@ -22,7 +22,7 @@ const breadcrumbItems = [
 
 const UsersPage = async () => {
   try {
-    const res = await axios.get("http://localhost:3000/api/admin/users");
+    const res = await axios.get("/api/admin/users");
     const users = res.data;
 
     if (!users) {
