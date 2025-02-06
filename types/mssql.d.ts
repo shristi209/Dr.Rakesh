@@ -20,6 +20,7 @@ declare module 'mssql' {
   }
 
   export interface ConnectionPool {
+    transaction(): unknown;
     connect(): Promise<void>;
     close(): Promise<void>;
     request(): Request;
